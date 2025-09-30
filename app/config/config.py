@@ -1,31 +1,27 @@
-from dataclasses import dataclass
-from environs import Env
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-@dataclass
-class DatabaseConfig:
-    postgres_db: str  # Название базы данных
-    host: str  # имя или ip адрес устройства
-    postgres_port: int  # порт базы данных
-    postgres_user: str  # Username пользователя базы данных
-    postgres_password: str  # Пароль к базе данных
+class Settings(BaseSettings):
+    """Class for settings"""
+
+    # Postgresql
+    POSTGRES_DB: str
+    POSTGRES_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    # pgAdmin
+    PGADMIN_DEFAULT_EMAIL: str
+    PGADMIN_DEFAULT_PASSWORD: str
+    PGADMIN_PORT: int
+    # Common
+    HOST: str
 
     @property
-    def postgres_url(self):  # Строка подключения к базе данных
-        return (
-            f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.host}:{self.postgres_port}/{self.postgres_db}",
-        )
+    def DATABASE_URL(self):
+        """Creating a database connection string"""
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+    model_config = SettingsConfigDict(env_file=".env")
 
 
-def load_db_config(path: str | None = None) -> DatabaseConfig:
-    """Служит для управления конфигурацией подключения к БД postgresql"""
-    env: Env = Env()
-    env.read_env(path)
-
-    return DatabaseConfig(
-        postgres_db=env("POSTGRES_DB"),
-        host=env("HOST"),
-        postgres_port=env("POSTGRES_PORT"),
-        postgres_user=env("POSTGRES_USER"),
-        postgres_password=env("POSTGRES_PASSWORD"),
-    )
+settings = Settings()

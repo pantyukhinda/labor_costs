@@ -1,10 +1,8 @@
-from app.config.config import load_db_config, DatabaseConfig
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from app.config.config import settings
 
-db_config: DatabaseConfig = load_db_config(".env")
-
-DATABASE_URL = str(db_config.postgres_url[0])
+DATABASE_URL = str(settings.DATABASE_URL)
 
 engine = create_async_engine(DATABASE_URL)
 
