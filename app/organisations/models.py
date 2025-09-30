@@ -1,27 +1,23 @@
-from sqlalchemy import (
-    Boolean,
-    Column,
-    Integer,
-    BigInteger,
-    String,
-    Text,
-    DateTime,
-    JSON,
-    ForeignKey,
-)
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
+from sqlalchemy import BigInteger, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import Optional
+
 from app.database import Base
 
 
-class Organisations(Base):
+class Organisation(Base):
     __tablename__ = "organisations"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True, unique=True)
-    name = Column(String(255))
+    id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+        autoincrement=True,
+    )
+    name: Mapped[Optional[str]] = mapped_column(String(255))
 
     # Relationships
-    activity_types = relationship("ActivityTypes", back_populates="organisations_rel")
-    projects = relationship("Projects", back_populates="organisations_rel")
-    divisions = relationship("Divisions", back_populates="organisations_rel")
+    activity_types: Mapped[list["ActivityType"]] = relationship(
+        back_populates="organisation"
+    )
+    projects: Mapped[list["Project"]] = relationship(back_populates="organisation")
+    divisions: Mapped[list["Division"]] = relationship(back_populates="organisation")
