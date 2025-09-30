@@ -4,7 +4,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 db_config: DatabaseConfig = load_db_config(".env")
 
-DATABASE_URL = str(db_config.postgres_url)
+DATABASE_URL = str(db_config.postgres_url[0])
 
 engine = create_async_engine(DATABASE_URL)
 
