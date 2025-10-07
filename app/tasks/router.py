@@ -1,55 +1,24 @@
-from datetime import datetime
-from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
-from app.database import async_session_maker
-from app.tasks.models import Task
+
+# from sqlalchemy import and_
+# from sqlalchemy.orm import Session
+# from pydantic import BaseModel
+# from app.database import async_session_maker
+# from app.tasks.models import Task
+# from app.tasks.schemes import TaskResponse, TaskCreate
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
-# Pydantic схемы
-class TaskBase(BaseModel):
-    user_id: int
-    project_id: int
-    type_of_activity_id: int
-    start_time: datetime
-    end_time: datetime
-    description: Optional[str] = None
-
-
-class TaskCreate(TaskBase):
-    pass
-
-
-class TaskUpdate(BaseModel):
-    user_id: Optional[int] = None
-    project_id: Optional[int] = None
-    type_of_activity_id: Optional[int] = None
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
-    description: Optional[str] = None
-
-
-class TaskResponse(TaskBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-@router.post("/", response_model=TaskResponse)
-async def create_task(task: TaskCreate):
-    """Создание новой задачи"""
-    async with async_session_maker() as session:
-        db_task = Task(**task.model_dump())
-        session.add(db_task)
-        await session.commit()
-        await session.refresh(db_task)
-        return db_task
+# @router.post("/", response_model=TaskResponse)
+# async def create_task(task: TaskCreate):
+#     """Создание новой задачи"""
+#     async with async_session_maker() as session:
+#         db_task = Task(**task.model_dump())
+#         session.add(db_task)
+#         await session.commit()
+#         await session.refresh(db_task)
+#         return db_task
 
 
 # @router.get("/", response_model=List[TaskResponse])

@@ -1,8 +1,12 @@
 from sqlalchemy import BigInteger, String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.organisations.models import Organisation
+    from app.tasks.models import Task
 
 
 class ActivityType(Base):
@@ -22,6 +26,10 @@ class ActivityType(Base):
 
     # Relationships
     organisation: Mapped[Optional["Organisation"]] = relationship(
-        back_populates="activity_types"
+        "Organisation",
+        back_populates="activity_types",
     )
-    tasks: Mapped[list["Task"]] = relationship(back_populates="activity_type")
+    task: Mapped[list["Task"]] = relationship(
+        "Task",
+        back_populates="activity_type",
+    )

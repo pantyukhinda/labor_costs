@@ -1,8 +1,13 @@
 from sqlalchemy import BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.activity_types.models import ActivityType
+    from app.devisions.models import Division
+    from app.projects.models import Project
 
 
 class Organisation(Base):
@@ -17,7 +22,14 @@ class Organisation(Base):
 
     # Relationships
     activity_types: Mapped[list["ActivityType"]] = relationship(
-        back_populates="organisation"
+        "ActivityType",
+        back_populates="organisation",
     )
-    projects: Mapped[list["Project"]] = relationship(back_populates="organisation")
-    divisions: Mapped[list["Division"]] = relationship(back_populates="organisation")
+    project: Mapped[list["Project"]] = relationship(
+        "Project",
+        back_populates="organisation",
+    )
+    division: Mapped[list["Division"]] = relationship(
+        "Division",
+        back_populates="organisation",
+    )

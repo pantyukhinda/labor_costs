@@ -1,8 +1,12 @@
 from sqlalchemy import BigInteger, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.devisions.models import Division
+    from app.tasks.models import Task
 
 
 class User(Base):
@@ -15,12 +19,18 @@ class User(Base):
     division_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(
-            "divisions.id",
+            "division.id",
             onupdate="CASCADE",
             ondelete="RESTRICT",
         ),
     )
 
     # Relationships
-    division: Mapped["Division"] = relationship(back_populates="users")
-    tasks: Mapped[list["Task"]] = relationship(back_populates="user")
+    division: Mapped["Division"] = relationship(
+        "Division",
+        back_populates="user",
+    )
+    task: Mapped[list["Task"]] = relationship(
+        "Task",
+        back_populates="user",
+    )

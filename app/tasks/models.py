@@ -2,9 +2,14 @@ from sqlalchemy import BigInteger, DateTime, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-from app.database import Base  # или ваш базовый класс
+from app.database import Base
+
+if TYPE_CHECKING:
+    from app.activity_types.models import ActivityType
+    from app.projects.models import Project
+    from app.users.models import User
 
 
 class Task(Base):
@@ -20,12 +25,12 @@ class Task(Base):
         nullable=False,
     )
     project_id: Mapped[int] = mapped_column(
-        ForeignKey("projects.id", onupdate="NO ACTION", ondelete="NO ACTION"),
+        ForeignKey("project.id", onupdate="NO ACTION", ondelete="NO ACTION"),
         nullable=False,
     )
     type_of_activity_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "activity_types.id",
+            "activity_type.id",
             onupdate="NO ACTION",
             ondelete="NO ACTION",
         ),
@@ -44,9 +49,18 @@ class Task(Base):
     )
 
     # Relationships
-    user: Mapped["User"] = relationship(back_populates="tasks")
-    project: Mapped["Project"] = relationship(back_populates="tasks")
-    activity_type: Mapped["ActivityType"] = relationship(back_populates="tasks")
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="task",
+    )
+    project: Mapped["Project"] = relationship(
+        "Project",
+        back_populates="task",
+    )
+    activity_type: Mapped["ActivityType"] = relationship(
+        "ActivityType",
+        back_populates="task",
+    )
 
     def __repr__(self) -> str:
         return (

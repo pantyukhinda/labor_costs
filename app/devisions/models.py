@@ -1,8 +1,12 @@
 from sqlalchemy import BigInteger, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.organisations.models import Organisation
+    from app.users.models import User
 
 
 class Division(Base):
@@ -16,10 +20,16 @@ class Division(Base):
     division: Mapped[Optional[Any]] = mapped_column(JSON)
     organisation_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organisation.id", onupdate="CASCADE", ondelete="RESTRICT"),
         nullable=False,
     )
 
     # Relationships
-    organisation: Mapped["Organisation"] = relationship(back_populates="divisions")
-    users: Mapped[list["User"]] = relationship(back_populates="division")
+    organisation: Mapped["Organisation"] = relationship(
+        "Organisation",
+        back_populates="division",
+    )
+    user: Mapped[list["User"]] = relationship(
+        "User",
+        back_populates="division",
+    )

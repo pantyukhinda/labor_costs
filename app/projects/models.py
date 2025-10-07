@@ -1,8 +1,12 @@
 from sqlalchemy import BigInteger, String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.organisations.models import Organisation
+    from app.tasks.models import Task
 
 
 class Project(Base):
@@ -17,11 +21,15 @@ class Project(Base):
     completed: Mapped[Optional[bool]] = mapped_column(Boolean)
     organisation_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,
-        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organisation.id", onupdate="CASCADE", ondelete="RESTRICT"),
     )
 
     # Relationships
     organisation: Mapped[Optional["Organisation"]] = relationship(
-        back_populates="projects"
+        "Organisation",
+        back_populates="project",
     )
-    tasks: Mapped[list["Task"]] = relationship(back_populates="project")
+    task: Mapped[list["Task"]] = relationship(
+        "Task",
+        back_populates="project",
+    )
