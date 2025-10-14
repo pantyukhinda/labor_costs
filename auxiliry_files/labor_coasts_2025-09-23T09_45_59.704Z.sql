@@ -1,4 +1,4 @@
-CREATE TABLE "organisations" (
+CREATE TABLE "organizations" (
 	"id" BIGSERIAL NOT NULL UNIQUE,
 	"name" VARCHAR(255),
 	PRIMARY KEY("id")
@@ -10,7 +10,7 @@ CREATE TABLE "organisations" (
 CREATE TABLE "activity_types" (
 	"id" BIGSERIAL NOT NULL UNIQUE,
 	"name" VARCHAR(255),
-	"organisation" INTEGER,
+	"organization" INTEGER,
 	"visible" BOOLEAN DEFAULT TRUE,
 	PRIMARY KEY("id")
 );
@@ -22,7 +22,7 @@ CREATE TABLE "projects" (
 	"id" BIGSERIAL NOT NULL UNIQUE,
 	"name" VARCHAR(255),
 	"completed" BOOLEAN,
-	"organisation" INTEGER,
+	"organization" INTEGER,
 	PRIMARY KEY("id")
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE "users" (
 CREATE TABLE "divisions" (
 	"id" BIGSERIAL NOT NULL UNIQUE,
 	"division" JSON,
-	"organisation" BIGINT NOT NULL,
+	"organization" BIGINT NOT NULL,
 	PRIMARY KEY("id")
 );
 
@@ -66,16 +66,16 @@ CREATE TABLE "tasks" (
 
 
 ALTER TABLE "activity_types"
-ADD FOREIGN KEY("organisation") REFERENCES "organisations"("id")
+ADD FOREIGN KEY("organization") REFERENCES "organizations"("id")
 ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE "projects"
-ADD FOREIGN KEY("organisation") REFERENCES "organisations"("id")
+ADD FOREIGN KEY("organization") REFERENCES "organizations"("id")
 ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE "users"
 ADD FOREIGN KEY("division") REFERENCES "divisions"("id")
 ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE "divisions"
-ADD FOREIGN KEY("organisation") REFERENCES "organisations"("id")
+ADD FOREIGN KEY("organization") REFERENCES "organizations"("id")
 ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE "tasks"
 ADD FOREIGN KEY("user") REFERENCES "users"("id")

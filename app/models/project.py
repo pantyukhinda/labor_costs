@@ -4,9 +4,9 @@ from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
 
-# if TYPE_CHECKING:
-#     from app.organisations.models import Organisation
-#     from app.tasks.models import Task
+if TYPE_CHECKING:
+    from app.models import Organization
+    from app.models import Task
 
 
 class Project(Base):
@@ -19,13 +19,13 @@ class Project(Base):
     )
     name: Mapped[Optional[str]] = mapped_column(String(255))
     completed: Mapped[Optional[bool]] = mapped_column(Boolean)
-    organisation_id: Mapped[Optional[int]] = mapped_column(
+    organization_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,
-        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organizations.id", onupdate="CASCADE", ondelete="RESTRICT"),
     )
 
     # Relationships
-    organisation: Mapped[Optional["Organisation"]] = relationship(
+    organization: Mapped[Optional["Organization"]] = relationship(
         back_populates="project",
     )
     task: Mapped[list["Task"]] = relationship(

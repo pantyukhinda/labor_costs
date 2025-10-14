@@ -4,9 +4,9 @@ from typing import Any, Optional, TYPE_CHECKING
 
 from app.database import Base
 
-# if TYPE_CHECKING:
-#     from app.organisations.models import Organisation
-#     from app.users.models import User
+if TYPE_CHECKING:
+    from app.models import Organization
+    from app.models import User
 
 
 class Division(Base):
@@ -18,14 +18,14 @@ class Division(Base):
         autoincrement=True,
     )
     division: Mapped[Optional[Any]] = mapped_column(JSON)
-    organisation_id: Mapped[int] = mapped_column(
+    organization_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organizations.id", onupdate="CASCADE", ondelete="RESTRICT"),
         nullable=False,
     )
 
     # Relationships
-    organisation: Mapped["Organisation"] = relationship(
+    organization: Mapped["Organization"] = relationship(
         back_populates="division",
     )
     user: Mapped[list["User"]] = relationship(

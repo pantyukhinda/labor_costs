@@ -2,7 +2,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from app.config.config import settings
 
+# It's necessary to comment out when alembic migrations are generated
 from app.models import *
+
 
 DATABASE_URL = str(settings.DATABASE_URL)
 
