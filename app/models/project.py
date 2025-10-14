@@ -4,9 +4,9 @@ from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
 
-if TYPE_CHECKING:
-    from app.organisations.models import Organisation
-    from app.tasks.models import Task
+# if TYPE_CHECKING:
+#     from app.organisations.models import Organisation
+#     from app.tasks.models import Task
 
 
 class Project(Base):

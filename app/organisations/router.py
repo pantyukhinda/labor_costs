@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.organisations.models import Organisation
+from app.models.organisation import Organisation
 from app.organisations.schemes import (
     OrganisationCreate,
     OrganisationUpdate,
@@ -19,7 +19,7 @@ async def get_organisations():
     async with async_session_maker() as session:
         query = select(Organisation)
         result = await session.execute(query)
-        print(result)
+        print(result.scalars().all())
 
 
 # @router.post("/", response_model=OrganisationResponse)

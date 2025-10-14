@@ -4,9 +4,9 @@ from typing import Any, Optional, TYPE_CHECKING
 
 from app.database import Base
 
-if TYPE_CHECKING:
-    from app.organisations.models import Organisation
-    from app.users.models import User
+# if TYPE_CHECKING:
+#     from app.organisations.models import Organisation
+#     from app.users.models import User
 
 
 class Division(Base):

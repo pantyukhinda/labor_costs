@@ -6,10 +6,10 @@ from typing import Optional, TYPE_CHECKING
 
 from app.database import Base
 
-if TYPE_CHECKING:
-    from app.activity_types.models import ActivityType
-    from app.projects.models import Project
-    from app.users.models import User
+# if TYPE_CHECKING:
+#     from app.activity_types.models import ActivityType
+#     from app.projects.models import Project
+#     from app.users.models import User
 
 
 class Task(Base):
