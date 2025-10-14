@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Organization
 from app.organizations.schemes import (
-    organizationCreate,
-    organizationUpdate,
-    organizationResponse,
+    OrganizationCreate,
+    OrganizationUpdate,
+    OrganizationResponse,
 )
 from app.database import async_session_maker
 
@@ -19,7 +19,7 @@ async def get_organizations():
     async with async_session_maker() as session:
         query = select(Organization)
         result = await session.execute(query)
-        print(result.scalars().all())
+        return result.scalars().all()
 
 
 # @router.post("/", response_model=organizationResponse)

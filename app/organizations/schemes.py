@@ -2,19 +2,19 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class organizationBase(BaseModel):
+class OrganizationBase(BaseModel):
     name: Optional[str] = None
 
 
-class organizationCreate(organizationBase):
+class OrganizationCreate(OrganizationBase):
     pass
 
 
-class organizationUpdate(organizationBase):
+class OrganizationUpdate(OrganizationBase):
     pass
 
 
-class organizationResponse(organizationBase):
+class OrganizationResponse(OrganizationBase):
     id: int
 
     class Config:
