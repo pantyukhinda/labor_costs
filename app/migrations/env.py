@@ -12,7 +12,7 @@ sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 from app.config.config import settings
 from app.database import Base
 from app.activity_types.models import ActivityType
-from app.devisions.models import Division
+from app.divisions.models import Division
 from app.organisations.models import Organisation
 from app.projects.models import Project
 from app.tasks.models import Task

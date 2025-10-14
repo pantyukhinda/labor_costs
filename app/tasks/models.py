@@ -25,12 +25,12 @@ class Task(Base):
         nullable=False,
     )
     project_id: Mapped[int] = mapped_column(
-        ForeignKey("project.id", onupdate="NO ACTION", ondelete="NO ACTION"),
+        ForeignKey("projects.id", onupdate="NO ACTION", ondelete="NO ACTION"),
         nullable=False,
     )
     type_of_activity_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "activity_type.id",
+            "activity_types.id",
             onupdate="NO ACTION",
             ondelete="NO ACTION",
         ),
@@ -50,15 +50,12 @@ class Task(Base):
 
     # Relationships
     user: Mapped["User"] = relationship(
-        "User",
         back_populates="task",
     )
     project: Mapped["Project"] = relationship(
-        "Project",
         back_populates="task",
     )
     activity_type: Mapped["ActivityType"] = relationship(
-        "ActivityType",
         back_populates="task",
     )
 

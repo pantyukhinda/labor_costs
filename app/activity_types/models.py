@@ -26,10 +26,8 @@ class ActivityType(Base):
 
     # Relationships
     organisation: Mapped[Optional["Organisation"]] = relationship(
-        "Organisation",
-        back_populates="activity_types",
+        back_populates="activity_type",
     )
     task: Mapped[list["Task"]] = relationship(
-        "Task",
         back_populates="activity_type",
     )

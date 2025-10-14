@@ -21,15 +21,13 @@ class Project(Base):
     completed: Mapped[Optional[bool]] = mapped_column(Boolean)
     organisation_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,
-        ForeignKey("organisation.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
     )
 
     # Relationships
     organisation: Mapped[Optional["Organisation"]] = relationship(
-        "Organisation",
         back_populates="project",
     )
     task: Mapped[list["Task"]] = relationship(
-        "Task",
         back_populates="project",
     )

@@ -20,16 +20,14 @@ class Division(Base):
     division: Mapped[Optional[Any]] = mapped_column(JSON)
     organisation_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("organisation.id", onupdate="CASCADE", ondelete="RESTRICT"),
+        ForeignKey("organisations.id", onupdate="CASCADE", ondelete="RESTRICT"),
         nullable=False,
     )
 
     # Relationships
     organisation: Mapped["Organisation"] = relationship(
-        "Organisation",
         back_populates="division",
     )
     user: Mapped[list["User"]] = relationship(
-        "User",
         back_populates="division",
     )

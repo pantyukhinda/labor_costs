@@ -5,7 +5,7 @@ from typing import Optional, TYPE_CHECKING
 from app.database import Base
 
 if TYPE_CHECKING:
-    from app.devisions.models import Division
+    from app.divisions.models import Division
     from app.tasks.models import Task
 
 
@@ -19,7 +19,7 @@ class User(Base):
     division_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(
-            "division.id",
+            "divisions.id",
             onupdate="CASCADE",
             ondelete="RESTRICT",
         ),
@@ -27,10 +27,8 @@ class User(Base):
 
     # Relationships
     division: Mapped["Division"] = relationship(
-        "Division",
         back_populates="user",
     )
     task: Mapped[list["Task"]] = relationship(
-        "Task",
         back_populates="user",
     )
