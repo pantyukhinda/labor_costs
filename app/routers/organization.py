@@ -9,9 +9,19 @@ from app.schemes.organization import (
     OrganizationUpdate,
     OrganizationResponse,
 )
+from app.dao.organization import OrganizationDAO
+
 from app.database import async_session_maker
 
 router = APIRouter(prefix="/organizations", tags=["organizations"])
+
+
+@router.get("/dao_get", response_model=List[OrganizationResponse])
+async def dao_get_organizations():
+    all_organizations = await OrganizationDAO.find_all()
+    if not all_organizations:
+        raise HTTPException(status_code=404, detail="No organizations found")
+    return all_organizations
 
 
 @router.post("/add", response_model=OrganizationResponse)

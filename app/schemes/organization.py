@@ -5,6 +5,9 @@ from pydantic import BaseModel
 class OrganizationBase(BaseModel):
     name: Optional[str] = None
 
+    class Config:
+        orm_mode = True
+
 
 class OrganizationCreate(OrganizationBase):
     pass

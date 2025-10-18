@@ -3,14 +3,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 # from sqlalchemy import and_
 # from sqlalchemy.orm import Session
 # from pydantic import BaseModel
+# from app.models import Task
+# from app.schemes.task import TaskResponse, TaskCreate
+
 # from app.database import async_session_maker
-# from app.tasks.models import Task
-# from app.tasks.schemes import TaskResponse, TaskCreate
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
-# @router.post("/", response_model=TaskResponse)
+# @router.post("/add", response_model=TaskResponse)
 # async def create_task(task: TaskCreate):
 #     """Создание новой задачи"""
 #     async with async_session_maker() as session:
