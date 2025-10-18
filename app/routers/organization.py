@@ -16,12 +16,24 @@ from app.database import async_session_maker
 router = APIRouter(prefix="/organizations", tags=["organizations"])
 
 
-@router.get("/dao_get", response_model=List[OrganizationResponse])
-async def dao_get_organizations():
+@router.get("/all", response_model=List[OrganizationResponse])
+async def get_all_organizations():
+    """Получение списка всех организаций"""
     all_organizations = await OrganizationDAO.find_all()
     if not all_organizations:
         raise HTTPException(status_code=404, detail="No organizations found")
-    return all_organizations
+    return [OrganizationResponse.model_validate(org) for org in all_organizations]
+
+
+@router.get("/{organization_id}", response_model=List[OrganizationResponse])
+async def get_organization_by_id(organization_id: int):
+    """Получение организации по id"""
+    organization = await OrganizationDAO.find_organization_by_id(
+        organization_id=organization_id
+    )
+    if not organization:
+        raise HTTPException(status_code=404, detail="No organization found")
+    return [OrganizationResponse.model_validate(org) for org in organization]
 
 
 @router.post("/add", response_model=OrganizationResponse)
@@ -35,14 +47,14 @@ async def create_organization(organization: OrganizationCreate):
         return OrganizationResponse.model_validate(db_organization)
 
 
-@router.get("/all", response_model=List[OrganizationResponse])
-async def get_organizations():
-    """Получение списка всех организаций"""
-    async with async_session_maker() as session:
-        query = select(Organization).order_by(Organization.id)
-        result = await session.execute(query)
-        organizations = result.scalars().all()
-        return [OrganizationResponse.model_validate(org) for org in organizations]
+# @router.get("/all", response_model=List[OrganizationResponse])
+# async def get_organizations():
+#     """Получение списка всех организаций"""
+#     async with async_session_maker() as session:
+#         query = select(Organization).order_by(Organization.id)
+#         result = await session.execute(query)
+#         organizations = result.scalars().all()
+#         return [OrganizationResponse.model_validate(org) for org in organizations]
 
 
 @router.get("/{organization_id}", response_model=OrganizationResponse)

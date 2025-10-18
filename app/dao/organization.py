@@ -13,19 +13,23 @@ class OrganizationDAO(BaseDAO):
     model = Organization
 
     @classmethod
-    async def find_organization(
+    async def find_organization_by_id(
         cls,
         organization_id: int,
     ):
 
         async with async_session_maker() as session:
-            get_all_organizations = select(
-                Organization.id,
-                Organization.name,
-            ).select_from(Organization)
+            get_organization_by_id = (
+                select(
+                    Organization.id,
+                    Organization.name,
+                )
+                .select_from(Organization)
+                .where(Organization.id == organization_id)
+            )
 
-            all_organizations = await session.execute(get_all_organizations)
-            return all_organizations.mappings().all()
+            organization = await session.execute(get_organization_by_id)
+            return organization.mappings().all()
 
     # @classmethod
     # async def add(
