@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
-from app.tasks.router import router as router_tasks
-from app.organizations.router import router as router_organizations
+from app.routers.task import router as router_tasks
+from app.routers.organization import router as router_organizations
 
 app = FastAPI()
 app.include_router(router_tasks)
