@@ -36,6 +36,16 @@ async def get_organization_by_id(organization_id: int):
     return [OrganizationResponse.model_validate(org) for org in organization]
 
 
+# TODO: Переписать роутер для использования схемы
+@router.post("/dao_add", response_model=OrganizationResponse)
+async def dao_create_organization(name: str):
+    # async def dao_create_organization(organization: OrganizationCreate):
+    # organization = await OrganizationDAO.add(organization=organization.model_dump())
+    organization = await OrganizationDAO.add(name=name)
+    # return OrganizationResponse.model_validate(organization)
+    return organization
+
+
 @router.post("/add", response_model=OrganizationResponse)
 async def create_organization(organization: OrganizationCreate):
     """Создание новой организации"""
