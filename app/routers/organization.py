@@ -36,45 +36,15 @@ async def get_organization_by_id(organization_id: int):
     return [OrganizationResponse.model_validate(org) for org in organization]
 
 
-@router.post("/dao_add", response_model=OrganizationResponse)
-async def dao_create_organization(organization: OrganizationCreate):
+@router.post("/add", response_model=OrganizationResponse)
+async def create_organization(organization: OrganizationCreate):
     """Создание новой организации"""
     new_organization = await OrganizationDAO.add(**organization.model_dump())
     return OrganizationResponse.model_validate(new_organization)
 
 
-@router.post("/add", response_model=OrganizationResponse)
-async def create_organization(organization: OrganizationCreate):
-    """Создание новой организации"""
-    async with async_session_maker() as session:
-        db_organization = Organization(**organization.model_dump())
-        session.add(db_organization)
-        await session.commit()
-        await session.refresh(db_organization)
-        return OrganizationResponse.model_validate(db_organization)
-
-
-# @router.get("/all", response_model=List[OrganizationResponse])
-# async def get_organizations():
-#     """Получение списка всех организаций"""
-#     async with async_session_maker() as session:
-#         query = select(Organization).order_by(Organization.id)
-#         result = await session.execute(query)
-#         organizations = result.scalars().all()
-#         return [OrganizationResponse.model_validate(org) for org in organizations]
-
-
-@router.get("/{organization_id}", response_model=OrganizationResponse)
-async def get_organization(organization_id: int):
-    """Получение организации по ID"""
-    async with async_session_maker() as session:
-        query = select(Organization).where(Organization.id == organization_id)
-        result = await session.execute(query)
-        organization = result.scalar_one_or_none()
-
-        if not organization:
-            raise HTTPException(status_code=404, detail="organization not found")
-        return OrganizationResponse.model_validate(organization)
+###
+# TODO: Реализовать обновление и удаление организации через DAO
 
 
 @router.put("/{organization_id}", response_model=OrganizationResponse)

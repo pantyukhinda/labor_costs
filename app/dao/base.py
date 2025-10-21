@@ -40,3 +40,8 @@ class BaseDAO:
                 msg = "Database Exc: Cannot insert data into table"
             elif isinstance(e, Exception):
                 msg = "Unknown Exc: Cannot insert data into table"
+
+
+# Добавить базовый метод для добавления данных в таблицу
+# Добавить базовый метод для обновления данных в таблице
+# Добавить базовый метод для удаления данных из таблицы
