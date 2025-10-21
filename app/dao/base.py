@@ -28,9 +28,7 @@ class BaseDAO:
                 insert(cls.model)
                 .values(**data)
                 .returning(
-                    # cls.model.__table__.columns
-                    cls.model.id,
-                    cls.model.name,
+                    cls.model.__table__.columns,
                 )
             )
             async with async_session_maker() as session:
