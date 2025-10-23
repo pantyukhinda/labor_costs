@@ -4,16 +4,16 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 
-from app.database import Base
+from app.models.base import Base
 
 if TYPE_CHECKING:
-    from app.models import ActivityType
+    from app.models import Activity_Type
     from app.models import Project
     from app.models import User
 
 
 class Task(Base):
-    __tablename__ = "tasks"
+    """Represents a table of tasks"""
 
     id: Mapped[int] = mapped_column(
         BigInteger,
@@ -55,7 +55,7 @@ class Task(Base):
     project: Mapped["Project"] = relationship(
         back_populates="task",
     )
-    activity_type: Mapped["ActivityType"] = relationship(
+    activity_type: Mapped["Activity_Type"] = relationship(
         back_populates="task",
     )
 

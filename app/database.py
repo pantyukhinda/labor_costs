@@ -1,10 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import (
-    DeclarativeBase,
-    declared_attr,
-    Mapped,
-    mapped_column,
-)
+
 from app.config.config import settings
 
 # It's necessary to comment out when alembic migrations are generated
@@ -30,13 +25,3 @@ class DataBase:
 
 
 database = DataBase()
-
-
-class Base(DeclarativeBase):
-    pass
-    __abstract__ = True
-
-    # Generate table name from class name
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"

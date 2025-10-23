@@ -2,7 +2,7 @@ from .project import Project
 from .division import Division
 from .user import User
 from .task import Task
-from .activity_type import ActivityType
+from .activity_type import Activity_Type
 from .organization import Organization
 
 __all__ = [
@@ -10,6 +10,6 @@ __all__ = [
     "Division",
     "User",
     "Task",
-    "ActivityType",
+    "Activity_Type",
     "Organization",
 ]

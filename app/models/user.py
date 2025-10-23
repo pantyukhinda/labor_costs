@@ -2,7 +2,7 @@ from sqlalchemy import BigInteger, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, TYPE_CHECKING
 
-from app.database import Base
+from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Division
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class User(Base):
-    __tablename__ = "users"
+    """Represents a table of users"""
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     last_name: Mapped[str] = mapped_column(String(255))

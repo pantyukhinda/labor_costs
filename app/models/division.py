@@ -2,7 +2,7 @@ from sqlalchemy import BigInteger, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Any, Optional, TYPE_CHECKING
 
-from app.database import Base
+from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Organization
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class Division(Base):
-    __tablename__ = "divisions"
+    """Represents a table of divisions"""
 
     id: Mapped[int] = mapped_column(
         BigInteger,

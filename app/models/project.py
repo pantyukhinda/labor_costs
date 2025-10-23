@@ -2,7 +2,7 @@ from sqlalchemy import BigInteger, String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, TYPE_CHECKING
 
-from app.database import Base
+from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Organization
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class Project(Base):
-    __tablename__ = "projects"
+    """Represents a table of projects"""
 
     id: Mapped[int] = mapped_column(
         BigInteger,

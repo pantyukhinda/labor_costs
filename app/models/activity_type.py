@@ -2,15 +2,15 @@ from sqlalchemy import BigInteger, String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, TYPE_CHECKING
 
-from app.database import Base
+from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Organization
     from app.models import Task
 
 
-class ActivityType(Base):
-    __tablename__ = "activity_types"
+class Activity_Type(Base):
+    """Represents a table of activity types"""
 
     id: Mapped[int] = mapped_column(
         BigInteger,
