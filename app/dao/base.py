@@ -1,7 +1,7 @@
 from sqlalchemy import insert, select, delete
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.database import async_session_maker
+from app.database import database
 
 
 class BaseDAO:
@@ -9,14 +9,14 @@ class BaseDAO:
 
     @classmethod
     async def find_one_or_none(cls, **filter_by):
-        async with async_session_maker() as session:
+        async with database.session_factory() as session:
             query = select(cls.model.__table__.columns).filter_by(**filter_by)
             result = await session.execute(query)
             return result.mappings().one_or_none()
 
     @classmethod
     async def find_all(cls, **filter_by):
-        async with async_session_maker() as session:
+        async with database.session_factory() as session:
             query = select(cls.model.__table__.columns).filter_by(**filter_by)
             result = await session.execute(query)
             return result.mappings().all()
@@ -31,7 +31,7 @@ class BaseDAO:
                     cls.model.__table__.columns,
                 )
             )
-            async with async_session_maker() as session:
+            async with database.session_factory() as session:
                 result = await session.execute(query)
                 await session.commit()
                 return result.mappings().first()
@@ -42,6 +42,6 @@ class BaseDAO:
                 msg = "Unknown Exc: Cannot insert data into table"
 
 
-# Добавить базовый метод для добавления данных в таблицу
-# Добавить базовый метод для обновления данных в таблице
-# Добавить базовый метод для удаления данных из таблицы
+# TODO: Добавить базовый метод для добавления данных в таблицу
+# TODO: Добавить базовый метод для обновления данных в таблице
+# TODO: Добавить базовый метод для удаления данных из таблицы

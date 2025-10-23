@@ -11,7 +11,6 @@ from app.schemes.organization import (
 )
 from app.dao.organization import OrganizationDAO
 
-from app.database import async_session_maker
 
 router = APIRouter(prefix="/organizations", tags=["organizations"])
 
@@ -47,39 +46,39 @@ async def create_organization(organization: OrganizationCreate):
 # TODO: Реализовать обновление и удаление организации через DAO
 
 
-@router.put("/{organization_id}", response_model=OrganizationResponse)
-async def update_organization(
-    organization_id: int, organization_update: OrganizationUpdate
-):
-    """Обновление организации"""
-    async with async_session_maker() as session:
-        query = select(Organization).where(Organization.id == organization_id)
-        result = await session.execute(query)
-        db_organization = result.scalar_one_or_none()
-        if not db_organization:
-            raise HTTPException(status_code=404, detail="Organization not found")
+# @router.put("/{organization_id}", response_model=OrganizationResponse)
+# async def update_organization(
+#     organization_id: int, organization_update: OrganizationUpdate
+# ):
+#     """Обновление организации"""
+#     async with async_session_maker() as session:
+#         query = select(Organization).where(Organization.id == organization_id)
+#         result = await session.execute(query)
+#         db_organization = result.scalar_one_or_none()
+#         if not db_organization:
+#             raise HTTPException(status_code=404, detail="Organization not found")
 
-        update_data = organization_update.model_dump(exclude_unset=True)
-        for field, value in update_data.items():
-            setattr(db_organization, field, value)
+#         update_data = organization_update.model_dump(exclude_unset=True)
+#         for field, value in update_data.items():
+#             setattr(db_organization, field, value)
 
-        session.add(db_organization)
-        await session.commit()
-        await session.refresh(db_organization)
-        return OrganizationResponse.model_validate(db_organization)
+#         session.add(db_organization)
+#         await session.commit()
+#         await session.refresh(db_organization)
+#         return OrganizationResponse.model_validate(db_organization)
 
 
-@router.delete("/{organization_id}")
-async def delete_organization(organization_id: int):
-    """Удаление организации"""
-    async with async_session_maker() as session:
-        query = select(Organization).where(Organization.id == organization_id)
-        result = await session.execute(query)
-        db_organization = result.scalar_one_or_none()
+# @router.delete("/{organization_id}")
+# async def delete_organization(organization_id: int):
+#     """Удаление организации"""
+#     async with async_session_maker() as session:
+#         query = select(Organization).where(Organization.id == organization_id)
+#         result = await session.execute(query)
+#         db_organization = result.scalar_one_or_none()
 
-        if not db_organization:
-            raise HTTPException(status_code=404, detail="Organization not found")
+#         if not db_organization:
+#             raise HTTPException(status_code=404, detail="Organization not found")
 
-        await session.delete(db_organization)
-        await session.commit()
-        return {"message": "Organization deleted successfully"}
+#         await session.delete(db_organization)
+#         await session.commit()
+#         return {"message": "Organization deleted successfully"}

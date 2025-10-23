@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.organization import Organization
 from app.dao.base import BaseDAO
-from app.database import async_session_maker, engine
+from app.database import database
 
 
 class OrganizationDAO(BaseDAO):
@@ -18,7 +18,7 @@ class OrganizationDAO(BaseDAO):
         organization_id: int,
     ):
 
-        async with async_session_maker() as session:
+        async with database.session_factory() as session:
             get_organization_by_id = (
                 select(
                     Organization.id,

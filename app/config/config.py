@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     PGADMIN_PORT: int
     # Common
     HOST: str
+    DB_ECHO: bool
 
     @property
     def DATABASE_URL(self):
