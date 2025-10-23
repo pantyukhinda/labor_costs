@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 class User(Base):
     """Represents a table of users"""
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     last_name: Mapped[str] = mapped_column(String(255))
     first_name: Mapped[str] = mapped_column(String(255))
     patronymic: Mapped[Optional[str]] = mapped_column(String(255))

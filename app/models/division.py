@@ -12,11 +12,6 @@ if TYPE_CHECKING:
 class Division(Base):
     """Represents a table of divisions"""
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True,
-    )
     division: Mapped[Optional[Any]] = mapped_column(JSON)
     organization_id: Mapped[int] = mapped_column(
         BigInteger,

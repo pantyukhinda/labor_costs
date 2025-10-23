@@ -6,7 +6,7 @@ from app.models.base import Base
 
 
 if TYPE_CHECKING:
-    from app.models import Activity_Type
+    from app.models import ActivityType
     from app.models import Division
     from app.models import Project
 
@@ -14,15 +14,10 @@ if TYPE_CHECKING:
 class Organization(Base):
     """Represents a table of organizations"""
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True,
-    )
     name: Mapped[Optional[str]] = mapped_column(String(255))
 
     # Relationships
-    activity_type: Mapped[list["Activity_Type"]] = relationship(
+    activity_type: Mapped[list["ActivityType"]] = relationship(
         back_populates="organization",
     )
     project: Mapped[list["Project"]] = relationship(

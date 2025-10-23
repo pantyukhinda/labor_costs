@@ -9,14 +9,9 @@ if TYPE_CHECKING:
     from app.models import Task
 
 
-class Activity_Type(Base):
+class ActivityType(Base):
     """Represents a table of activity types"""
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True,
-    )
     name: Mapped[Optional[str]] = mapped_column(String(255))
     organization_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,

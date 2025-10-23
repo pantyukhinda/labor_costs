@@ -7,7 +7,7 @@ from typing import Optional, TYPE_CHECKING
 from app.models.base import Base
 
 if TYPE_CHECKING:
-    from app.models import Activity_Type
+    from app.models import ActivityType
     from app.models import Project
     from app.models import User
 
@@ -15,11 +15,6 @@ if TYPE_CHECKING:
 class Task(Base):
     """Represents a table of tasks"""
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True,
-    )
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", onupdate="NO ACTION", ondelete="NO ACTION"),
         nullable=False,
@@ -55,7 +50,7 @@ class Task(Base):
     project: Mapped["Project"] = relationship(
         back_populates="task",
     )
-    activity_type: Mapped["Activity_Type"] = relationship(
+    activity_type: Mapped["ActivityType"] = relationship(
         back_populates="task",
     )
 

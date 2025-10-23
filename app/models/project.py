@@ -12,11 +12,6 @@ if TYPE_CHECKING:
 class Project(Base):
     """Represents a table of projects"""
 
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        primary_key=True,
-        autoincrement=True,
-    )
     name: Mapped[Optional[str]] = mapped_column(String(255))
     completed: Mapped[Optional[bool]] = mapped_column(Boolean)
     organization_id: Mapped[Optional[int]] = mapped_column(
