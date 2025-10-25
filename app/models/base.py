@@ -19,9 +19,9 @@ class Base(DeclarativeBase):
         table_name = re.sub(r"(?<!^)(?=[A-Z])", "_", self.__name__).lower()
         return f"{table_name}s"
 
-    # TODO: Исправить. В таблицах, созданных при помощи этого базового класса, поле id идет последним.
     id: Mapped[int] = mapped_column(
         BigInteger,
         primary_key=True,
         autoincrement=True,
+        sort_order=-1,
     )
