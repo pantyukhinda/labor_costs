@@ -12,24 +12,24 @@ from app.database import database
 class OrganizationDAO(BaseDAO):
     model = Organization
 
-    @classmethod
-    async def find_organization_by_id(
-        cls,
-        organization_id: int,
-    ):
+    # @classmethod
+    # async def find_organization_by_id(
+    #     cls,
+    #     organization_id: int,
+    # ):
 
-        async with database.session_factory() as session:
-            get_organization_by_id = (
-                select(
-                    Organization.id,
-                    Organization.name,
-                )
-                .select_from(Organization)
-                .where(Organization.id == organization_id)
-            )
+    #     async with database.session_factory() as session:
+    #         get_organization_by_id = (
+    #             select(
+    #                 Organization.id,
+    #                 Organization.name,
+    #             )
+    #             .select_from(Organization)
+    #             .where(Organization.id == organization_id)
+    #         )
 
-            organization = await session.execute(get_organization_by_id)
-            return organization.mappings().all()
+    #         organization = await session.execute(get_organization_by_id)
+    #         return organization.mappings().all()
 
     # @classmethod
     # async def add(

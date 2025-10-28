@@ -23,25 +23,29 @@ class BaseDAO:
 
     @classmethod
     async def add(cls, **data):
-        try:
-            query = (
-                insert(cls.model)
-                .values(**data)
-                .returning(
-                    cls.model.__table__.columns,
-                )
+        query = (
+            insert(cls.model)
+            .values(**data)
+            .returning(
+                cls.model.__table__.columns,
             )
-            async with database.session_factory() as session:
-                result = await session.execute(query)
-                await session.commit()
-                return result.mappings().first()
-        except (SQLAlchemyError, Exception) as e:
-            if isinstance(e, SQLAlchemyError):
-                msg = "Database Exc: Cannot insert data into table"
-            elif isinstance(e, Exception):
-                msg = "Unknown Exc: Cannot insert data into table"
+        )
+        async with database.session_factory() as session:
+            result = await session.execute(query)
+            await session.commit()
+            return result.mappings().first()
+
+    @classmethod
+    async def delete(cls, **filter_by):
+        async with database.session_factory() as session:
+            query = (
+                delete(cls.model)
+                .filter_by(**filter_by)
+                .returning(cls.model.__table__.columns)
+            )
+            result = await session.execute(query)
+            await session.commit()
+            return result.mappings().one_or_none()
 
 
-# TODO: Добавить базовый метод для добавления данных в таблицу
 # TODO: Добавить базовый метод для обновления данных в таблице
-# TODO: Добавить базовый метод для удаления данных из таблицы
