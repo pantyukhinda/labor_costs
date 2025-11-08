@@ -19,6 +19,3 @@ class OrganizationUpdate(OrganizationBase):
 
 class OrganizationResponse(OrganizationBase):
     id: int
-
-    class Config:
-        from_attributes = True
