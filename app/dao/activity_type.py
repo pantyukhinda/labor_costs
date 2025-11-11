@@ -1,4 +1,4 @@
-from app.models.organization import ActivityType
+from app.models.activity_type import ActivityType
 from app.dao.base import BaseDAO
 
 

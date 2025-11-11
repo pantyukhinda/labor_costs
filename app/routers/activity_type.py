@@ -1,6 +1,5 @@
 from typing import List
 from fastapi import APIRouter, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemes.activity_type import (
     ActivityTypeCreate,
@@ -29,6 +28,9 @@ async def get_all_activity_types():
     return [
         ActivityTypeResponse.model_validate(a_type) for a_type in all_activity_types
     ]
+
+
+# TODO: Add handlers for get all activity types of a specific organization
 
 
 @router.get("/{activity_type_id}", response_model=ActivityTypeResponse)

@@ -3,10 +3,14 @@ from fastapi import FastAPI
 
 from app.routers.task import router as router_tasks
 from app.routers.organization import router as router_organizations
+from app.routers.activity_type import router as router_activity_types
+from app.routers.division import router as router_divisions
 
 app = FastAPI()
 app.include_router(router_tasks)
 app.include_router(router_organizations)
+app.include_router(router_activity_types)
+app.include_router(router_divisions)
 
 
 if __name__ == "__main__":
