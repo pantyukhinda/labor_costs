@@ -44,14 +44,15 @@ class BaseDAO:
             query = select(cls.model).where(cls.model.__table__.columns.id == id)
             result = await session.execute(query)
             data_update = result.scalars().first()
-            print(data_update, type(data_update), dir(data_update))
-            for field, value in data.items():
-                setattr(data_update, field, value)
+            if data_update:
+                for field, value in data.items():
+                    setattr(data_update, field, value)
 
-            # session.add(data_update)
-            await session.commit()
-            await session.refresh(data_update)
-            return data_update
+                # session.add(data_update)
+                await session.commit()
+                await session.refresh(data_update)
+                return data_update
+            return None
 
     @classmethod
     async def delete(cls, **filter_by):
