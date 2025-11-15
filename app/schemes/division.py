@@ -1,6 +1,5 @@
-# Pydantic схемы
-from pydantic import BaseModel
 from typing import Optional, Any
+from pydantic import BaseModel
 
 
 class DivisionBase(BaseModel):
