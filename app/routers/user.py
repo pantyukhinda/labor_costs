@@ -12,8 +12,17 @@ from app.dao.user import UserDAO
 router = APIRouter(prefix="/user", tags=["user"])
 
 
+# @router.post(
+#     "/add",
+#     response_model=UserResponse,
+#     status_code=status.HTTP_201_CREATED,
+# )
+# async def create_user(user: UserCreate):
+#     """Create new user"""
+#     new_user = await UserDAO.add(**user.model_dump())
+#     return UserResponse.model_validate(new_user)
 @router.post(
-    "/add",
+    "/register",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
 )
