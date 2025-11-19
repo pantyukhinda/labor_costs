@@ -61,6 +61,20 @@ async def update_activity_type(
     return ActivityTypeResponse.model_validate(update_a_type)
 
 
+@router.patch("/{activity_type_id}", response_model=ActivityTypeResponse)
+async def partial_update_activity_type(
+    activity_type_id: int, activity_type_update: ActivityTypeUpdate
+):
+    """Partial update activity type"""
+    update_a_type = await ActivityTypeDAO.update(
+        id=activity_type_id, **activity_type_update.model_dump(exclude_unset=True)
+    )
+    if not update_a_type:
+        raise HTTPException(status_code=404, detail="Activity type not found")
+
+    return ActivityTypeResponse.model_validate(update_a_type)
+
+
 @router.delete("/{activity_type_id}", response_model=ActivityTypeResponse)
 async def delete_activity_type(activity_type_id: int):
     """Delete activity type"""

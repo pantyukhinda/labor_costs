@@ -52,6 +52,18 @@ async def update_user(user_id: int, user_update: UserUpdate):
     return UserResponse.model_validate(update_a_type)
 
 
+@router.patch("/{user_id}", response_model=UserResponse)
+async def partial_update_user(user_id: int, user_update: UserUpdate):
+    """Partial update user"""
+    update_a_type = await UserDAO.update(
+        id=user_id, **user_update.model_dump(exclude_unset=True)
+    )
+    if not update_a_type:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return UserResponse.model_validate(update_a_type)
+
+
 @router.delete("/{user_id}", response_model=UserResponse)
 async def delete_user(user_id: int):
     """Delete user"""

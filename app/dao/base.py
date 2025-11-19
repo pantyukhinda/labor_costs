@@ -1,8 +1,6 @@
-from asyncio import sleep
 from sqlalchemy import insert, select, delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.engine import Result
-
 
 from app.database import database
 

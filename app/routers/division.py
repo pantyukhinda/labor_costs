@@ -32,9 +32,6 @@ async def get_all_divisions():
     return [DivisionResponse.model_validate(a_type) for a_type in all_divisions]
 
 
-# TODO:
-
-
 @router.get("/{division_id}", response_model=DivisionResponse)
 async def get_division_by_id(division_id: int):
     """Get division by id"""
@@ -50,6 +47,18 @@ async def update_division(division_id: int, division_update: DivisionUpdate):
     """Update division"""
     update_a_type = await DivisionDAO.update(
         id=division_id, **division_update.model_dump()
+    )
+    if not update_a_type:
+        raise HTTPException(status_code=404, detail="Division not found")
+
+    return DivisionResponse.model_validate(update_a_type)
+
+
+@router.patch("/{division_id}", response_model=DivisionResponse)
+async def partial_update_division(division_id: int, division_update: DivisionUpdate):
+    """Partial update division"""
+    update_a_type = await DivisionDAO.update(
+        id=division_id, **division_update.model_dump(exclude_unset=True)
     )
     if not update_a_type:
         raise HTTPException(status_code=404, detail="Division not found")

@@ -56,6 +56,20 @@ async def update_organization(
     return OrganizationResponse.model_validate(update_org)
 
 
+@router.patch("/{organization_id}", response_model=OrganizationResponse)
+async def partial_update_organization(
+    organization_id: int, organization_update: OrganizationUpdate
+):
+    """Partial update organization"""
+    update_org = await OrganizationDAO.update(
+        id=organization_id, **organization_update.model_dump(exclude_unset=True)
+    )
+    if not update_org:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return OrganizationResponse.model_validate(update_org)
+
+
 @router.delete("/{organization_id}", response_model=OrganizationResponse)
 async def delete_organization(organization_id: int):
     """Delete organization"""

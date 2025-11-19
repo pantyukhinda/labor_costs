@@ -56,6 +56,18 @@ async def update_task(task_id: int, task_update: TaskUpdate):
     return TaskResponse.model_validate(update_a_type)
 
 
+@router.patch("/{task_id}", response_model=TaskResponse)
+async def partial_update_task(task_id: int, task_update: TaskUpdate):
+    """Partial update task"""
+    update_a_type = await TaskDAO.update(
+        id=task_id, **task_update.model_dump(exclude_unset=True)
+    )
+    if not update_a_type:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return TaskResponse.model_validate(update_a_type)
+
+
 @router.delete("/{task_id}", response_model=TaskResponse)
 async def delete_task(task_id: int):
     """Delete task"""
