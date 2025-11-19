@@ -1,6 +1,8 @@
 from asyncio import sleep
 from sqlalchemy import insert, select, delete
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.engine import Result
+
 
 from app.database import database
 
@@ -34,7 +36,11 @@ class BaseDAO:
     @classmethod
     async def find_all(cls, **filter_by):
         async with database.session_factory() as session:
-            query = select(cls.model.__table__.columns).filter_by(**filter_by)
+            query = (
+                select(cls.model.__table__.columns)
+                .filter_by(**filter_by)
+                .order_by(cls.model.__table__.columns.id)
+            )
             result = await session.execute(query)
             return result.mappings().all()
 

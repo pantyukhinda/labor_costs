@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.task import (
     TaskCreate,
@@ -19,7 +19,11 @@ async def create_task(task: TaskCreate):
     return TaskResponse.model_validate(new_task)
 
 
-@router.get("/all", response_model=List[TaskResponse])
+@router.get(
+    "/all",
+    response_model=List[TaskResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 async def get_all_tasks():
     """Get all tasks"""
     all_tasks = await TaskDAO.find_all()

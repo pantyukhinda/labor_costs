@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.division import (
     DivisionCreate,
@@ -12,7 +12,11 @@ from app.dao.division import DivisionDAO
 router = APIRouter(prefix="/division", tags=["division"])
 
 
-@router.post("/add", response_model=DivisionResponse)
+@router.post(
+    "/add",
+    response_model=DivisionResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_division(division: DivisionCreate):
     """Create new division"""
     new_division = await DivisionDAO.add(**division.model_dump())

@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.user import (
     UserCreate,
@@ -12,7 +12,11 @@ from app.dao.user import UserDAO
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post("/add", response_model=UserResponse)
+@router.post(
+    "/add",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_user(user: UserCreate):
     """Create new user"""
     new_user = await UserDAO.add(**user.model_dump())

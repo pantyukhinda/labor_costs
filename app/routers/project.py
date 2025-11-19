@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.project import (
     ProjectCreate,
@@ -12,7 +12,11 @@ from app.dao.project import ProjectDAO
 router = APIRouter(prefix="/project", tags=["project"])
 
 
-@router.post("/add", response_model=ProjectResponse)
+@router.post(
+    "/add",
+    response_model=ProjectResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_project(project: ProjectCreate):
     """Create new project"""
     new_project = await ProjectDAO.add(**project.model_dump())

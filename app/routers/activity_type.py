@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.activity_type import (
     ActivityTypeCreate,
@@ -12,7 +12,11 @@ from app.dao.activity_type import ActivityTypeDAO
 router = APIRouter(prefix="/activity_type", tags=["activity_type"])
 
 
-@router.post("/add", response_model=ActivityTypeResponse)
+@router.post(
+    "/add",
+    response_model=ActivityTypeResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_activity_type(activity_type: ActivityTypeCreate):
     """Create new activity type"""
     new_activity_type = await ActivityTypeDAO.add(**activity_type.model_dump())

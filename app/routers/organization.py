@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemes.organization import (
     OrganizationCreate,
@@ -12,7 +12,11 @@ from app.dao.organization import OrganizationDAO
 router = APIRouter(prefix="/organizations", tags=["organizations"])
 
 
-@router.post("/add", response_model=OrganizationResponse)
+@router.post(
+    "/add",
+    response_model=OrganizationResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_organization(organization: OrganizationCreate):
     """Create new organization"""
     new_organization = await OrganizationDAO.add(**organization.model_dump())
