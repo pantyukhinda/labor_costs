@@ -16,7 +16,7 @@ class User(Base):
     first_name: Mapped[str] = mapped_column(String(255))
     patronymic: Mapped[Optional[str]] = mapped_column(String(255))
     email: Mapped[str] = mapped_column(String(255))
-    password: Mapped[str] = mapped_column(String(255))
+    password: Mapped[Optional[str]] = mapped_column(String(255))
     division_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(

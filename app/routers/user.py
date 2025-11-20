@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
+from app.auth.auth import auth_verifier
 from app.schemes.user import (
     UserCreate,
     UserUpdate,
@@ -9,7 +10,7 @@ from app.schemes.user import (
 from app.dao.user import UserDAO
 
 
-router = APIRouter(prefix="/user", tags=["user"])
+router = APIRouter(prefix="/user", tags=["user & auth"])
 
 
 # @router.post(
@@ -26,8 +27,15 @@ router = APIRouter(prefix="/user", tags=["user"])
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_user(user: UserCreate):
-    """Create new user"""
+async def register_user(user: UserCreate):
+    """Register new user"""
+    existing_user = await UserDAO.find_one_or_none(email=user.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User with the entered email already exists",
+        )
+    hashed_password = auth_verifier.get_password_hash(user.password)
     new_user = await UserDAO.add(**user.model_dump())
     return UserResponse.model_validate(new_user)
 

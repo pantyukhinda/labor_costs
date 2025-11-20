@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Project(Base):
     """Represents a table of projects"""
 
-    name: Mapped[Optional[str]] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(255))
     completed: Mapped[Optional[bool]] = mapped_column(Boolean)
     organization_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class ActivityType(Base):
     """Represents a table of activity types"""
 
-    name: Mapped[Optional[str]] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(255))
     organization_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,
         ForeignKey("organizations.id", onupdate="CASCADE", ondelete="RESTRICT"),

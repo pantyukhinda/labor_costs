@@ -17,30 +17,26 @@ class Task(Base):
 
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", onupdate="NO ACTION", ondelete="NO ACTION"),
-        nullable=False,
     )
     project_id: Mapped[int] = mapped_column(
         ForeignKey("projects.id", onupdate="NO ACTION", ondelete="NO ACTION"),
-        nullable=False,
     )
-    type_of_activity_id: Mapped[int] = mapped_column(
+    type_of_activity_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey(
             "activity_types.id",
             onupdate="NO ACTION",
             ondelete="NO ACTION",
         ),
-        nullable=False,
     )
     start_time: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False
+        DateTime(timezone=True),
     )
     end_time: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        nullable=False,
     )
     description: Mapped[Optional[str]] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), server_default=func.now()
     )
 
     # Relationships

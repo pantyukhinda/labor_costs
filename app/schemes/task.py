@@ -4,11 +4,11 @@ from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
-    user_id: Optional[int] = None
-    project_id: Optional[int] = None
-    type_of_activity_id: Optional[int] = None
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
+    user_id: int
+    project_id: int
+    type_of_activity_id: int
+    start_time: datetime
+    end_time: datetime
     description: Optional[str] = None
 
     class Config:

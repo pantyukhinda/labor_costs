@@ -3,15 +3,15 @@ from pydantic import BaseModel
 
 
 class DivisionsLevels(BaseModel):
-    level_01: Optional[str]
-    level_02: Optional[str]
-    level_03: Optional[str]
-    level_04: Optional[str]
+    level_01: str = ""
+    level_02: str = ""
+    level_03: str = ""
+    level_04: str = ""
 
 
 class DivisionBase(BaseModel):
     division: Optional[DivisionsLevels]
-    organization_id: Optional[int]
+    organization_id: int
 
     class Config:
         from_attributes = True

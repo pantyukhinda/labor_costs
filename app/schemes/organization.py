@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class OrganizationBase(BaseModel):
-    name: Optional[str] = None
+    name: str
 
     class Config:
         from_attributes = True

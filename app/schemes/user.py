@@ -3,10 +3,10 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserBase(BaseModel):
-    last_name: Optional[str] = None
-    first_name: Optional[str] = None
+    last_name: str
+    first_name: str
     patronymic: Optional[str] = None
-    email: Optional[str] = None
+    email: EmailStr
     password: Optional[str] = None
     division_id: Optional[int] = None
 

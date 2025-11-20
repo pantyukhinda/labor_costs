@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 
 class ProjectBase(BaseModel):
-    name: Optional[str] = None
-    completed: Optional[bool] = False
+    name: str
+    completed: bool = False
     organization_id: Optional[int] = None
 
     class Config:

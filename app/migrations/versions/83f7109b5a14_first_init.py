@@ -1,8 +1,8 @@
 """First init
 
-Revision ID: d80e6732f9e3
+Revision ID: 83f7109b5a14
 Revises:
-Create Date: 2025-10-25 09:05:18.074646
+Create Date: 2025-11-20 08:33:46.312410
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "d80e6732f9e3"
+revision: str = "83f7109b5a14"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,13 +25,13 @@ def upgrade() -> None:
     op.create_table(
         "organizations",
         sa.Column("id", sa.BigInteger(), autoincrement=True, nullable=False),
-        sa.Column("name", sa.String(length=255), nullable=True),
+        sa.Column("name", sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "activity_types",
         sa.Column("id", sa.BigInteger(), autoincrement=True, nullable=False),
-        sa.Column("name", sa.String(length=255), nullable=True),
+        sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("organization_id", sa.BigInteger(), nullable=True),
         sa.Column("visible", sa.Boolean(), nullable=False),
         sa.ForeignKeyConstraint(
@@ -58,7 +58,7 @@ def upgrade() -> None:
     op.create_table(
         "projects",
         sa.Column("id", sa.BigInteger(), autoincrement=True, nullable=False),
-        sa.Column("name", sa.String(length=255), nullable=True),
+        sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("completed", sa.Boolean(), nullable=True),
         sa.Column("organization_id", sa.BigInteger(), nullable=True),
         sa.ForeignKeyConstraint(
@@ -76,7 +76,7 @@ def upgrade() -> None:
         sa.Column("first_name", sa.String(length=255), nullable=False),
         sa.Column("patronymic", sa.String(length=255), nullable=True),
         sa.Column("email", sa.String(length=255), nullable=False),
-        sa.Column("password", sa.String(length=255), nullable=False),
+        sa.Column("password", sa.String(length=255), nullable=True),
         sa.Column("division_id", sa.BigInteger(), nullable=False),
         sa.ForeignKeyConstraint(
             ["division_id"], ["divisions.id"], onupdate="CASCADE", ondelete="RESTRICT"
@@ -88,7 +88,7 @@ def upgrade() -> None:
         sa.Column("id", sa.BigInteger(), autoincrement=True, nullable=False),
         sa.Column("user_id", sa.BigInteger(), nullable=False),
         sa.Column("project_id", sa.BigInteger(), nullable=False),
-        sa.Column("type_of_activity_id", sa.BigInteger(), nullable=False),
+        sa.Column("type_of_activity_id", sa.BigInteger(), nullable=True),
         sa.Column("start_time", sa.DateTime(timezone=True), nullable=False),
         sa.Column("end_time", sa.DateTime(timezone=True), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),

@@ -16,7 +16,6 @@ class Division(Base):
     organization_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey("organizations.id", onupdate="CASCADE", ondelete="RESTRICT"),
-        nullable=False,
     )
 
     # Relationships

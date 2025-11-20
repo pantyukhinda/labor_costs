@@ -3,9 +3,9 @@ from pydantic import BaseModel
 
 
 class ActivityTypeBase(BaseModel):
-    name: Optional[str] = None
+    name: str
     organization_id: Optional[int] = None
-    visible: Optional[bool] = None
+    visible: bool = True
 
     class Config:
         from_attributes = True

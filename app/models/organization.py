@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class Organization(Base):
     """Represents a table of organizations"""
 
-    name: Mapped[Optional[str]] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(255))
 
     # Relationships
     activity_type: Mapped[list["ActivityType"]] = relationship(
