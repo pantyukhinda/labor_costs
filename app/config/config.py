@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     # Common
     HOST: str
     DB_ECHO: bool
+    # auth
+    KEY: str
+    ALGORITHM: str
 
     @property
     def DATABASE_URL(self):

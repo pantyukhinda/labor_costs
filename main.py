@@ -11,11 +11,11 @@ from app.routers.project import router as router_projects
 
 
 app = FastAPI()
+app.include_router(router_users)
 app.include_router(router_tasks)
 app.include_router(router_organizations)
 app.include_router(router_activity_types)
 app.include_router(router_divisions)
-app.include_router(router_users)
 app.include_router(router_projects)
 
 
