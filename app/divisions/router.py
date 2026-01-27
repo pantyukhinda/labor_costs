@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemes.division import (
+from .schemas import (
     DivisionCreate,
     DivisionUpdate,
     DivisionResponse,
 )
-from app.dao.division import DivisionDAO
+from .dao import DivisionDAO
 
 
 router = APIRouter(prefix="/division", tags=["division"])

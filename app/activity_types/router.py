@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemes.activity_type import (
+from .schemas import (
     ActivityTypeCreate,
     ActivityTypeUpdate,
     ActivityTypeResponse,
 )
-from app.dao.activity_type import ActivityTypeDAO
+from .dao import ActivityTypeDAO
 
 
 router = APIRouter(prefix="/activity_type", tags=["activity_type"])

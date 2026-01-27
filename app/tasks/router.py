@@ -1,14 +1,15 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.dependencies.user import get_current_user
-from app.models.user import User
-from app.schemes.task import (
+from dependencies.user import get_current_user
+from users.models import User
+
+from .schemas import (
     TaskCreate,
     TaskUpdate,
     TaskResponse,
 )
-from app.dao.task import TaskDAO
+from .dao import TaskDAO
 
 
 router = APIRouter(prefix="/task", tags=["task"])

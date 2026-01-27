@@ -1,12 +1,13 @@
-from sqlalchemy import BigInteger, JSON, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Any, Optional, TYPE_CHECKING
 
-from app.models.base import Base
+from sqlalchemy import BigInteger, JSON, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from core.models import Base
 
 if TYPE_CHECKING:
-    from app.models import Organization
-    from app.models import User
+    from organizations.models import Organization
+    from users.models import User
 
 
 class Division(Base):

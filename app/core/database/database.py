@@ -1,9 +1,14 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 
-from app.config.config import settings
+from core.config import settings
 
 # It's necessary to comment out when alembic migrations are generated
-from app.models import *
+from activity_types.models import ActivityType
+from divisions.models import Division
+from organizations.models import Organization
+from projects.models import Project
+from tasks.models import Task
+from users.models import User
 
 
 class DataBase:

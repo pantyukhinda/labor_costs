@@ -1,5 +1,6 @@
-from app.models.organization import Organization
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import Organization
 
 
 class OrganizationDAO(BaseDAO):

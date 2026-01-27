@@ -1,14 +1,14 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, Request, Response, status
+from fastapi import APIRouter, HTTPException, Response, status
 
-from app.auth.auth import auth_verifier
-from app.schemes.user import (
+from auth.auth import auth_verifier
+from .schemas import (
     UserCreate,
     UserLogin,
     UserUpdate,
     UserResponse,
 )
-from app.dao.user import UserDAO
+from .dao import UserDAO
 
 
 router = APIRouter(prefix="/user", tags=["user & auth"])

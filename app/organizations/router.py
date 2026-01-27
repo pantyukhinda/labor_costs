@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemes.organization import (
+from .schemas import (
     OrganizationCreate,
     OrganizationUpdate,
     OrganizationResponse,
 )
-from app.dao.organization import OrganizationDAO
+from .dao import OrganizationDAO
 
 
 router = APIRouter(prefix="/organizations", tags=["organizations"])

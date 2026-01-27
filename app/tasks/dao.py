@@ -1,5 +1,6 @@
-from app.models.task import Task
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import Task
 
 
 class TaskDAO(BaseDAO):

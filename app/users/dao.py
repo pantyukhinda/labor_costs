@@ -1,5 +1,6 @@
-from app.models.user import User
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import User
 
 
 class UserDAO(BaseDAO):

@@ -1,5 +1,6 @@
-from app.models.activity_type import ActivityType
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import ActivityType
 
 
 class ActivityTypeDAO(BaseDAO):

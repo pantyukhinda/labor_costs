@@ -1,5 +1,6 @@
-from app.models.division import Division
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import Division
 
 
 class DivisionDAO(BaseDAO):

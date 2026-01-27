@@ -1,5 +1,6 @@
-from app.models.project import Project
-from app.core.dao.base import BaseDAO
+from core.dao import BaseDAO
+
+from .models import Project
 
 
 class ProjectDAO(BaseDAO):

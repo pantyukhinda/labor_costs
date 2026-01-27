@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemes.project import (
+from .schemas import (
     ProjectCreate,
     ProjectUpdate,
     ProjectResponse,
 )
-from app.dao.project import ProjectDAO
+from .dao import ProjectDAO
 
 
 router = APIRouter(prefix="/project", tags=["project"])

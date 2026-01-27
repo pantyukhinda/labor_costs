@@ -1,12 +1,13 @@
-from sqlalchemy import BigInteger, String, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, TYPE_CHECKING
 
-from app.core.models.base import Base
+from sqlalchemy import BigInteger, String, Boolean, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from core.models import Base
 
 if TYPE_CHECKING:
-    from app.models import Organization
-    from app.models import Task
+    from organizations.models import Organization
+    from tasks.models import Task
 
 
 class ActivityType(Base):

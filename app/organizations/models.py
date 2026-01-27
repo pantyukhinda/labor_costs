@@ -1,14 +1,15 @@
-from sqlalchemy import BigInteger, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from app.core.models.base import Base
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from core.models import Base
 
 
 if TYPE_CHECKING:
-    from app.models import ActivityType
-    from app.models import Division
-    from app.models import Project
+    from activity_types.models import ActivityType
+    from divisions.models import Division
+    from projects.models import Project
 
 
 class Organization(Base):

@@ -1,13 +1,15 @@
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+
+# from typing import Optional
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
 
-from app.config.config import settings
-from app.dao.user import UserDAO
-from app.schemes.user import UserResponse
+from core.config import settings
+from users.dao import UserDAO
+
+# from users.schemas import UserResponse
 
 
 class AuthVerifier:

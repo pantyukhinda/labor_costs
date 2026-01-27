@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
 from fastapi import Depends, HTTPException, Request, status
 from jose import jwt, JWTError
-from app.config.config import settings
-from app.dao.user import UserDAO
-from app.models.user import User
+from core.config import settings
+from users.dao import UserDAO
+
+# from users.models import User
 
 
 def get_token(request: Request):

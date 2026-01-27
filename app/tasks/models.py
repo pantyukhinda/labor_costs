@@ -1,15 +1,16 @@
-from sqlalchemy import BigInteger, DateTime, Text, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
+from sqlalchemy import DateTime, Text, ForeignKey
 
-from app.core.models.base import Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+
+from core.models import Base
 
 if TYPE_CHECKING:
-    from app.models import ActivityType
-    from app.models import Project
-    from app.models import User
+    from activity_types.models import ActivityType
+    from projects.models import Project
+    from users.models import User
 
 
 class Task(Base):

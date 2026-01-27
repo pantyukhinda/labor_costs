@@ -9,15 +9,15 @@ from alembic import context
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from app.config.config import settings
-from app.core.models.base import Base
+from config.config import settings
+from core.models.base import Base
 
-from app.models import ActivityType
-from app.models import Division
-from app.models import Organization
-from app.models import Project
-from app.models import Task
-from app.models import User
+from models import ActivityType
+from models import Division
+from models import Organization
+from models import Project
+from models import Task
+from models import User
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
