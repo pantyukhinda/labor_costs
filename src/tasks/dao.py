@@ -1,5 +1,5 @@
 from app.models.task import Task
-from app.dao.base import BaseDAO
+from app.core.dao.base import BaseDAO
 
 
 class TaskDAO(BaseDAO):

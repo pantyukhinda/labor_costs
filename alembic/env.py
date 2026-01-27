@@ -10,7 +10,7 @@ from alembic import context
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 from app.config.config import settings
-from app.models.base import Base
+from app.core.models.base import Base
 
 from app.models import ActivityType
 from app.models import Division

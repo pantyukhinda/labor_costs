@@ -2,7 +2,7 @@ from sqlalchemy import BigInteger, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, TYPE_CHECKING
 
-from app.models.base import Base
+from app.core.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import Division

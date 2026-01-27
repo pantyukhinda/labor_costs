@@ -1,5 +1,5 @@
 from app.models.project import Project
-from app.dao.base import BaseDAO
+from app.core.dao.base import BaseDAO
 
 
 class ProjectDAO(BaseDAO):

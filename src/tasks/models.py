@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 
-from app.models.base import Base
+from app.core.models.base import Base
 
 if TYPE_CHECKING:
     from app.models import ActivityType

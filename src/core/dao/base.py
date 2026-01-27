@@ -2,7 +2,7 @@ from sqlalchemy import insert, select, delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.engine import Result
 
-from app.database import database
+from app.core.database.database import database
 
 
 class BaseDAO:
