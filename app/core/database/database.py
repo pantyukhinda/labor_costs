@@ -16,8 +16,8 @@ class DataBase:
 
     def __init__(self):
         self.engine = create_async_engine(
-            url=str(settings.DATABASE_URL),
-            echo=settings.DB_ECHO,
+            url=str(settings.db.async_url),
+            echo=settings.db.echo,
         )
 
         self.session_factory = async_sessionmaker(

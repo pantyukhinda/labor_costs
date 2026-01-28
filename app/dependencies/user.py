@@ -25,8 +25,8 @@ async def get_current_user(token: str = Depends(get_token)):
     try:
         payload = jwt.decode(
             token,
-            key=settings.KEY,
-            algorithms=settings.ALGORITHM,
+            key=settings.auth.key,
+            algorithms=settings.auth.algorithm,
         )
     except JWTError:
         raise HTTPException(

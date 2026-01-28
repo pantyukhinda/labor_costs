@@ -36,8 +36,8 @@ class AuthVerifier:
         to_encode.update({"exp": expire})
         encode_jwt = jwt.encode(
             claims=to_encode,
-            key=settings.KEY,
-            algorithm=settings.ALGORITHM,
+            key=settings.auth.key,
+            algorithm=settings.auth.algorithm,
         )
         return encode_jwt
 

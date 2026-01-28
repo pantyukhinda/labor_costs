@@ -1,31 +1,73 @@
+from pydantic import BaseModel, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import URL
+
+# CONFIG_DIR = Path(__file__).resolve().parent
+# ENV_FILE =
+
+
+class DatabaseConfig(BaseModel):
+    host: str
+    name: str
+    port: int
+    user: str
+    password: SecretStr
+
+    echo: bool
+    echo_pool: bool
+    pool_size: int
+    max_overflow: int
+
+    naming_convention: dict[str, str] = {
+        "ix": "ix_%(column_0_label)s",
+        "uq": "uq_%(table_name)s_%(column_0_N_name)s",
+        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+        "pk": "pk_%(table_name)s",
+    }
+
+    @property
+    def async_url(self) -> URL:
+        return URL.create(
+            drivername="postgresql+asyncpg",
+            database=self.name,
+            host=self.host,
+            port=self.port,
+            username=self.user,
+            password=self.password.get_secret_value(),
+        )
+
+
+class RunConfig(BaseModel):
+    title: str
+    host: str
+    port: int
+    reload: bool
+
+
+class AuthenticateConfig(BaseModel):
+    key: str
+    algorithm: str
 
 
 class Settings(BaseSettings):
-    """Class for settings"""
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_prefix="APP_CONFIG__",
+        case_sensitive=False,
+        env_nested_delimiter="__",
+        env_file=(
+            "env.template",
+            ".env",
+        ),
+    )
+    db: DatabaseConfig
 
-    # Postgresql
-    POSTGRES_DB: str
-    POSTGRES_PORT: int
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    # pgAdmin
-    PGADMIN_DEFAULT_EMAIL: str
-    PGADMIN_DEFAULT_PASSWORD: str
-    PGADMIN_PORT: int
-    # Common
-    HOST: str
-    DB_ECHO: bool
-    # auth
-    KEY: str
-    ALGORITHM: str
-
-    @property
-    def DATABASE_URL(self):
-        """Creating a database connection string"""
-        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-
-    model_config = SettingsConfigDict(env_file=".env")
+    run: RunConfig
+    auth: AuthenticateConfig
+    # api: ApiPrefix = ApiPrefix()
 
 
 settings = Settings()
+print(settings.model_dump_json(indent=2))
+print(settings.db.async_url)

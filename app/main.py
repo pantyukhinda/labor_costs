@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from core.config import settings
 
 
 from tasks.router import router as router_tasks
@@ -10,7 +11,7 @@ from users.router import router as router_users
 from projects.router import router as router_projects
 
 
-app = FastAPI()
+app = FastAPI(title=settings.run.title)
 app.include_router(router_users)
 app.include_router(router_tasks)
 app.include_router(router_organizations)
@@ -22,7 +23,7 @@ app.include_router(router_projects)
 if __name__ == "__main__":
     uvicorn.run(
         f"{__name__}:app",
-        host="127.0.0.1",
-        port=8001,
-        reload=True,
+        host=settings.run.host,
+        port=settings.run.port,
+        reload=settings.run.reload,
     )
