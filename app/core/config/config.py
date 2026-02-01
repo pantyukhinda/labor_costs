@@ -1,4 +1,4 @@
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, EmailStr, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -50,6 +50,12 @@ class AuthenticateConfig(BaseModel):
     algorithm: str
 
 
+class PgAdminConfig(BaseModel):
+    email: EmailStr
+    password: SecretStr
+    port: int
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         extra="ignore",
@@ -62,9 +68,9 @@ class Settings(BaseSettings):
         ),
     )
     db: DatabaseConfig
-
     run: RunConfig
     auth: AuthenticateConfig
+    pgadmin: PgAdminConfig
     # api: ApiPrefix = ApiPrefix()
 
 

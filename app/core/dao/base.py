@@ -1,6 +1,7 @@
 from sqlalchemy import insert, select, delete
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.engine import Result
+
+# from sqlalchemy.exc import SQLAlchemyError
+# from sqlalchemy.engine import Result
 
 from core.database.database import database
 

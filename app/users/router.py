@@ -14,17 +14,6 @@ from .dao import UserDAO
 router = APIRouter(prefix="/user", tags=["user & auth"])
 
 
-# @router.get("/debug")
-# async def get_debug_information(request: Request):
-#     """Get debug information"""
-#     return {
-#         "user": request.cookies,
-#         "headers": request.headers,
-#         "base_url": request.base_url,
-#         "client": request.client,
-#     }
-
-
 @router.post(
     "/register",
     response_model=UserResponse,
