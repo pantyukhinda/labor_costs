@@ -1,6 +1,7 @@
-from logging.config import fileConfig
 import sys
 from os.path import abspath, dirname
+
+from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -8,21 +9,26 @@ from sqlalchemy import pool
 from alembic import context
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
+sys.path.insert(0, dirname(dirname(abspath(__file__))) + "/app")
 
-from config.config import settings
-from core.models.base import Base
 
-from models import ActivityType
-from models import Division
-from models import Organization
-from models import Project
-from models import Task
-from models import User
+from core.config import settings
+from core.models import Base
+from activity_types.models import ActivityType
+from divisions.models import Division
+from organizations.models import Organization
+from projects.models import Project
+from tasks.models import Task
+from users.models import User
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option("sqlalchemy.url", f"{settings.DATABASE_URL}?async_fallback=True")
+
+config.set_main_option(
+    "sqlalchemy.url",
+    f"{settings.db.async_url.render_as_string(hide_password=False)}?async_fallback=True",
+)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
