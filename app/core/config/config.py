@@ -75,5 +75,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(settings.model_dump_json(indent=2))
-print(settings.db.async_url)
