@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import (
 
 from core.config import settings
 
-# It's necessary to comment out when alembic migrations are generated
 from activity_types.models import ActivityType
 from divisions.models import Division
 from organizations.models import Organization

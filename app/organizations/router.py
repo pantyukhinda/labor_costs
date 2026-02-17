@@ -8,7 +8,7 @@ from .schemas import (
 )
 from .dao import OrganizationDAO
 
-
+# TODO: Change prefix to "Organization"
 router = APIRouter(prefix="/organizations", tags=["organizations"])
 
 
