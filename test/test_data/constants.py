@@ -44,7 +44,7 @@ ACTIVITY_TYPES = [
 
 def generate_organization(n_org: int = N_ORG) -> Generator:
     """Organization generator"""
-    while n_org >= 0:
+    while n_org > 0:
         organization = {
             "name": faker.company(),
         }
@@ -53,6 +53,7 @@ def generate_organization(n_org: int = N_ORG) -> Generator:
         yield organization
 
 
+# TODO: Create 10 division records for every organization
 def generate_division(
     n_division: int = N_DIV,
 ) -> Generator:
@@ -91,6 +92,7 @@ def generate_user(
         yield user
 
 
+# Create 10 project records for every organization
 def generate_project(
     n_project: int = N_PROJ,
 ) -> Generator:
@@ -124,6 +126,7 @@ def generate_activity_type(
         yield activity_type
 
 
+# Use all divisions and all projects
 def generate_task(
     n_task: int = N_TASK,
 ) -> Generator:
