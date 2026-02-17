@@ -1,11 +1,6 @@
 import asyncio
 from posixpath import abspath, dirname
-import random
-import sys
 
-
-# sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
-# sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))) + "/app")
 
 from dao import (
     OrganizationDAO,
@@ -63,12 +58,12 @@ async def create_tasks(tasks_: list[dict]):
 
 
 async def main():
-    task01 = create_organizations(organizations_=organizations)
-    task02 = create_divisions(divisions_=divisions)
-    task03 = create_users(users_=users)
-    task04 = create_projects(projects_=projects)
-    task05 = create_activity_types(activity_types_=activity_types)
-    task06 = create_tasks(tasks_=tasks)
+    task01 = create_organizations(organizations_=list(organizations))
+    task02 = create_divisions(divisions_=list(divisions))
+    task03 = create_users(users_=list(users))
+    task04 = create_projects(projects_=list(projects))
+    task05 = create_activity_types(activity_types_=list(activity_types))
+    task06 = create_tasks(tasks_=list(tasks))
 
     await task01
     await task02
