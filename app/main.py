@@ -27,3 +27,4 @@ if __name__ == "__main__":
         port=settings.run.port,
         reload=settings.run.reload,
     )
+# TODO: Add initial step, it must be adds "admin" user with id = 0.
