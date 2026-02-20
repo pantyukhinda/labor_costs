@@ -47,6 +47,16 @@ async def login_user(response: Response, user_data: UserLogin):
     return {"access_token": access_token}
 
 
+@router.post(
+    "/logout",
+    status_code=status.HTTP_200_OK,
+)
+async def logout_user(response: Response):
+    """Logout user"""
+    response.delete_cookie("labor_costs_access_token")
+    return {"logout": True}
+
+
 @router.get("/all", response_model=List[UserResponse])
 async def get_all_users():
     """Get all users"""
