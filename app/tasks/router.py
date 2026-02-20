@@ -36,15 +36,11 @@ async def get_all_tasks():
 
 
 # TODO: Add handlers for get all tasks of a specific project
-# TODO: Add handlers for get all tasks of a specific user
 @router.get("/tasks_of_current_user")
 async def get_current_user_tasks(user: User = Depends(get_current_user)):
     """Get all tasks of a specific user"""
-    return {
-        "user": user,
-        "type": type(user),
-    }
-    # return await TaskDAO.find_all()
+
+    return await TaskDAO.find_all(user_id=user.id)
 
 
 @router.get("/{task_id}", response_model=TaskResponse)

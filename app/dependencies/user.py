@@ -15,8 +15,6 @@ def get_token(request: Request):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
         )
-    print(token)
-    print(type(token))
     return token
 
 
@@ -48,7 +46,7 @@ async def get_current_user(token: str = Depends(get_token)):
             detail="User id not found",
         )
 
-    user = UserDAO.find_one_or_none(id=int(user_id))
+    user = await UserDAO.find_one_or_none(id=int(user_id))
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
