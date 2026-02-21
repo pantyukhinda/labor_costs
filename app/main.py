@@ -10,6 +10,8 @@ from divisions.router import router as router_divisions
 from users.router import router as router_users
 from projects.router import router as router_projects
 
+from pages.router import router as pages_router
+
 
 app = FastAPI(title=settings.run.title)
 app.include_router(router_users)
@@ -18,6 +20,8 @@ app.include_router(router_organizations)
 app.include_router(router_activity_types)
 app.include_router(router_divisions)
 app.include_router(router_projects)
+
+app.include_router(pages_router)
 
 
 if __name__ == "__main__":
@@ -28,3 +32,4 @@ if __name__ == "__main__":
         reload=settings.run.reload,
     )
 # TODO: Add initial step, it must be adds "admin" user with id = 0.
+# TODO: Change main exceptions with custom exceptions

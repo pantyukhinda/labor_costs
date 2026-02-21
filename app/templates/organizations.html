@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor costs</title>
+</head>
+
+<body>
+    <div>
+        {% for organization in organizations %}
+        <div style="display: flex; margin: 15px;">
+            <!-- <img src="{{ url_for('static', path='images/' + organization.image_id|string + '.webp') }}" alt="Фото отеля" -->
+                <!-- width="300"> -->
+            <div style="margin: 15px;">
+                <h3>{{organization.name}}</h3>
+                <!-- <h4>{{organization.location}}</h4> -->
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
