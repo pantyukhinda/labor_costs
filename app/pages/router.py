@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
@@ -5,7 +7,7 @@ from organizations.router import get_all_organizations
 
 router = APIRouter(prefix="/pages", tags=["Фронтенд"])
 
-templates = Jinja2Templates(directory="/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/Organizations")
