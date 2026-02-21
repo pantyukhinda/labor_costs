@@ -1,25 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Organizations — Labor costs{% endblock %}
+{% block content %}
+<h1>Organizations</h1>
+<div class="panel">
+  <div class="panel__header">
+    <h2 class="mb-0">All organizations</h2>
+    <button type="button" class="btn btn--primary" id="btn-add">Add organization</button>
+  </div>
+  <div id="form-wrap" style="display: none;">
+    <form id="org-form">
+      <input type="hidden" id="org-id" name="id">
+      <div class="form-group">
+        <label for="org-name">Name</label>
+        <input type="text" id="org-name" name="name" required>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn--primary">Save</button>
+        <button type="button" class="btn btn--secondary" id="org-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div id="alert-wrap"></div>
+  <div class="table-wrap">
+    <table class="data-table" id="org-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th class="actions">Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="org-empty" class="empty-state" style="display: none;">
+    <p>No organizations yet.</p>
+    <button type="button" class="btn btn--primary" id="btn-add-empty">Add organization</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/api.js"></script>
+<script>
+(function() {
+  const tbody = document.querySelector('#org-table tbody');
+  const formWrap = document.getElementById('form-wrap');
+  const form = document.getElementById('org-form');
+  const orgId = document.getElementById('org-id');
+  const orgName = document.getElementById('org-name');
+  const alertWrap = document.getElementById('alert-wrap');
+  const emptyState = document.getElementById('org-empty');
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labor costs</title>
-</head>
+  function showAlert(msg, type) {
+    type = type || 'info';
+    alertWrap.innerHTML = '<div class="alert alert--' + type + '">' + msg + '</div>';
+    setTimeout(function() { alertWrap.innerHTML = ''; }, 4000);
+  }
 
-<body>
-    <div>
-        {% for organization in organizations %}
-        <div style="display: flex; margin: 15px;">
-            {# <img src="{{ url_for('static', path='images/' + organization.image_id|string + '.webp') }}"
-                alt="Фото отеля" --> #}
-            <div style="margin: 15px;">
-                <h3>{{organization.name}}</h3>
-                <!-- <h4>{{organization.location}}</h4> -->
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</body>
+  function showForm(editId, name) {
+    orgId.value = editId || '';
+    orgName.value = name || '';
+    formWrap.style.display = 'block';
+  }
 
-</html>
+  function hideForm() {
+    formWrap.style.display = 'none';
+    orgId.value = '';
+    orgName.value = '';
+  }
+
+  function render(rows) {
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0) {
+      document.getElementById('org-table').style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    document.getElementById('org-table').style.display = 'table';
+    emptyState.style.display = 'none';
+    rows.forEach(function(r) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r.id + '</td><td>' + escapeHtml(r.name) + '</td><td class="actions">' +
+        '<button type="button" class="btn btn--small btn--secondary edit-btn" data-id="' + r.id + '" data-name="' + escapeHtml(r.name) + '">Edit</button> ' +
+        '<button type="button" class="btn btn--small btn--danger del-btn" data-id="' + r.id + '">Delete</button></td>';
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('.edit-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { showForm(this.dataset.id, this.dataset.name); });
+    });
+    tbody.querySelectorAll('.del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this organization?')) return;
+        API.organizations.delete(+this.dataset.id).then(function() {
+          load();
+          showAlert('Deleted.');
+        }).catch(function(e) {
+          showAlert(e.data?.detail || e.message, 'error');
+        });
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function load() {
+    API.organizations.list().then(render).catch(function(e) {
+      showAlert(e.data?.detail || e.message, 'error');
+      render([]);
+    });
+  }
+
+  document.getElementById('btn-add').onclick = function() { showForm(null, ''); };
+  document.getElementById('btn-add-empty').onclick = function() { showForm(null, ''); };
+  document.getElementById('org-cancel').onclick = hideForm;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = orgId.value ? +orgId.value : null;
+    const payload = { name: orgName.value };
+    const p = id ? API.organizations.update(id, payload) : API.organizations.create(payload);
+    p.then(function() {
+      hideForm();
+      load();
+      showAlert(id ? 'Updated.' : 'Created.');
+    }).catch(function(err) {
+      showAlert(err.data?.detail || err.message, 'error');
+    });
+  });
+
+  load();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Divisions — Labor costs{% endblock %}
+{% block content %}
+<h1>Divisions</h1>
+<div class="panel">
+  <div class="panel__header">
+    <h2 class="mb-0">All divisions</h2>
+    <button type="button" class="btn btn--primary" id="btn-add">Add division</button>
+  </div>
+  <div id="form-wrap" style="display: none;">
+    <form id="div-form">
+      <input type="hidden" id="div-id" name="id">
+      <div class="form-group">
+        <label for="div-organization_id">Organization ID</label>
+        <input type="number" id="div-organization_id" name="organization_id" required min="1">
+      </div>
+      <div class="form-group">
+        <label>Level 01</label>
+        <input type="text" id="div-level_01" name="level_01" placeholder="Level 01">
+      </div>
+      <div class="form-group">
+        <label>Level 02</label>
+        <input type="text" id="div-level_02" name="level_02" placeholder="Level 02">
+      </div>
+      <div class="form-group">
+        <label>Level 03</label>
+        <input type="text" id="div-level_03" name="level_03" placeholder="Level 03">
+      </div>
+      <div class="form-group">
+        <label>Level 04</label>
+        <input type="text" id="div-level_04" name="level_04" placeholder="Level 04">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn--primary">Save</button>
+        <button type="button" class="btn btn--secondary" id="div-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div id="alert-wrap"></div>
+  <div class="table-wrap">
+    <table class="data-table" id="div-table">
+      <thead>
+        <tr><th>ID</th><th>Organization ID</th><th>Levels</th><th class="actions">Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="div-empty" class="empty-state" style="display: none;">
+    <p>No divisions yet.</p>
+    <button type="button" class="btn btn--primary" id="btn-add-empty">Add division</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/api.js"></script>
+<script>
+(function() {
+  const tbody = document.querySelector('#div-table tbody');
+  const formWrap = document.getElementById('form-wrap');
+  const form = document.getElementById('div-form');
+  const idEl = document.getElementById('div-id');
+  const orgIdEl = document.getElementById('div-organization_id');
+  const l1 = document.getElementById('div-level_01'), l2 = document.getElementById('div-level_02'), l3 = document.getElementById('div-level_03'), l4 = document.getElementById('div-level_04');
+  const alertWrap = document.getElementById('alert-wrap');
+  const emptyState = document.getElementById('div-empty');
+
+  function showAlert(msg, type) {
+    alertWrap.innerHTML = '<div class="alert alert--' + (type || 'info') + '">' + msg + '</div>';
+    setTimeout(function() { alertWrap.innerHTML = ''; }, 4000);
+  }
+  function divToLevels(d) {
+    if (!d || !d.division) return { level_01: '', level_02: '', level_03: '', level_04: '' };
+    return {
+      level_01: d.division.level_01 || '',
+      level_02: d.division.level_02 || '',
+      level_03: d.division.level_03 || '',
+      level_04: d.division.level_04 || ''
+    };
+  }
+  function showForm(item) {
+    if (item) {
+      idEl.value = item.id;
+      orgIdEl.value = item.organization_id;
+      var levels = divToLevels(item);
+      l1.value = levels.level_01; l2.value = levels.level_02; l3.value = levels.level_03; l4.value = levels.level_04;
+    } else {
+      idEl.value = '';
+      orgIdEl.value = '';
+      l1.value = l2.value = l3.value = l4.value = '';
+    }
+    formWrap.style.display = 'block';
+  }
+  function hideForm() { formWrap.style.display = 'none'; }
+  function levelsStr(d) {
+    var L = divToLevels(d);
+    return [L.level_01, L.level_02, L.level_03, L.level_04].filter(Boolean).join(' / ') || '—';
+  }
+  function render(rows) {
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0) {
+      document.getElementById('div-table').style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    document.getElementById('div-table').style.display = 'table';
+    emptyState.style.display = 'none';
+    rows.forEach(function(r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r.id + '</td><td>' + r.organization_id + '</td><td>' + levelsStr(r) + '</td><td class="actions">' +
+        '<button type="button" class="btn btn--small btn--secondary edit-btn" data-id="' + r.id + '">Edit</button> ' +
+        '<button type="button" class="btn btn--small btn--danger del-btn" data-id="' + r.id + '">Delete</button></td>';
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('.edit-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        API.divisions.get(+this.dataset.id).then(showForm).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+      });
+    });
+    tbody.querySelectorAll('.del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this division?')) return;
+        API.divisions.delete(+this.dataset.id).then(function() { load(); showAlert('Deleted.'); }).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+      });
+    });
+  }
+  function load() {
+    API.divisions.list().then(render).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); render([]); });
+  }
+  document.getElementById('btn-add').onclick = function() { showForm(null); };
+  document.getElementById('btn-add-empty').onclick = function() { showForm(null); };
+  document.getElementById('div-cancel').onclick = hideForm;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var id = idEl.value ? +idEl.value : null;
+    var payload = {
+      organization_id: +orgIdEl.value,
+      division: { level_01: l1.value, level_02: l2.value, level_03: l3.value, level_04: l4.value }
+    };
+    var p = id ? API.divisions.update(id, payload) : API.divisions.create(payload);
+    p.then(function() { hideForm(); load(); showAlert(id ? 'Updated.' : 'Created.'); }).catch(function(err) { showAlert(err.data?.detail || err.message, 'error'); });
+  });
+  load();
+})();
+</script>
+{% endblock %}

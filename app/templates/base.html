@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Labor costs{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Condensed&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/ubuntu-theme.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <a href="/pages/">Labor costs</a>
+      </div>
+      <ul class="sidebar__nav">
+        <li><a href="/pages/" class="{% if request.url.path == '/' or request.url.path == '/pages/' %}active{% endif %}">Dashboard</a></li>
+        <li><a href="/pages/organizations" class="{% if '/pages/organizations' in request.url.path %}active{% endif %}">Organizations</a></li>
+        <li><a href="/pages/projects" class="{% if '/pages/projects' in request.url.path %}active{% endif %}">Projects</a></li>
+        <li><a href="/pages/divisions" class="{% if '/pages/divisions' in request.url.path %}active{% endif %}">Divisions</a></li>
+        <li><a href="/pages/activity-types" class="{% if '/pages/activity-types' in request.url.path %}active{% endif %}">Activity types</a></li>
+        <li><a href="/pages/tasks" class="{% if '/pages/tasks' in request.url.path %}active{% endif %}">Tasks</a></li>
+        <li class="sidebar__divider"></li>
+        {% if user %}
+        <li><a href="/pages/logout">Log out</a></li>
+        {% else %}
+        <li><a href="/pages/login">Log in</a></li>
+        <li><a href="/pages/register">Register</a></li>
+        {% endif %}
+      </ul>
+    </aside>
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

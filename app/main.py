@@ -1,7 +1,11 @@
+from pathlib import Path
+
 import uvicorn
 from fastapi import FastAPI
-from core.config import settings
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
+from core.config import settings
 
 from tasks.router import router as router_tasks
 from organizations.router import router as router_organizations
@@ -14,6 +18,17 @@ from pages.router import router as pages_router
 
 
 app = FastAPI(title=settings.run.title)
+
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/pages/", status_code=302)
+
+
+static_dir = Path(__file__).resolve().parent / "static"
+if static_dir.is_dir():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
 app.include_router(router_users)
 app.include_router(router_tasks)
 app.include_router(router_organizations)

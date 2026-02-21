@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Tasks — Labor costs{% endblock %}
+{% block content %}
+<h1>Tasks</h1>
+<div class="panel">
+  <div class="panel__header">
+    <h2 class="mb-0">All tasks</h2>
+    <button type="button" class="btn btn--primary" id="btn-add">Add task</button>
+  </div>
+  <div id="form-wrap" style="display: none;">
+    <form id="task-form">
+      <input type="hidden" id="task-id" name="id">
+      <div class="form-group">
+        <label for="task-user_id">User ID</label>
+        <input type="number" id="task-user_id" name="user_id" required min="1">
+      </div>
+      <div class="form-group">
+        <label for="task-project_id">Project ID</label>
+        <input type="number" id="task-project_id" name="project_id" required min="1">
+      </div>
+      <div class="form-group">
+        <label for="task-type_of_activity_id">Activity type ID</label>
+        <input type="number" id="task-type_of_activity_id" name="type_of_activity_id" required min="1">
+      </div>
+      <div class="form-group">
+        <label for="task-start_time">Start time</label>
+        <input type="datetime-local" id="task-start_time" name="start_time" required step="1">
+      </div>
+      <div class="form-group">
+        <label for="task-end_time">End time</label>
+        <input type="datetime-local" id="task-end_time" name="end_time" required step="1">
+      </div>
+      <div class="form-group">
+        <label for="task-description">Description</label>
+        <textarea id="task-description" name="description" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn--primary">Save</button>
+        <button type="button" class="btn btn--secondary" id="task-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div id="alert-wrap"></div>
+  <div class="table-wrap">
+    <table class="data-table" id="task-table">
+      <thead>
+        <tr><th>ID</th><th>User</th><th>Project</th><th>Activity type</th><th>Start</th><th>End</th><th class="actions">Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="task-empty" class="empty-state" style="display: none;">
+    <p>No tasks yet.</p>
+    <button type="button" class="btn btn--primary" id="btn-add-empty">Add task</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/api.js"></script>
+<script>
+(function() {
+  function toLocalISO(d) {
+    if (!d) return '';
+    var dt = new Date(d);
+    var y = dt.getFullYear(), m = String(dt.getMonth() + 1).padStart(2, '0'), day = String(dt.getDate()).padStart(2, '0');
+    var h = String(dt.getHours()).padStart(2, '0'), min = String(dt.getMinutes()).padStart(2, '0'), s = String(dt.getSeconds()).padStart(2, '0');
+    return y + '-' + m + '-' + day + 'T' + h + ':' + min + ':' + s;
+  }
+  const tbody = document.querySelector('#task-table tbody');
+  const formWrap = document.getElementById('form-wrap');
+  const form = document.getElementById('task-form');
+  const idEl = document.getElementById('task-id');
+  const userIdEl = document.getElementById('task-user_id');
+  const projectIdEl = document.getElementById('task-project_id');
+  const typeIdEl = document.getElementById('task-type_of_activity_id');
+  const startEl = document.getElementById('task-start_time');
+  const endEl = document.getElementById('task-end_time');
+  const descEl = document.getElementById('task-description');
+  const alertWrap = document.getElementById('alert-wrap');
+  const emptyState = document.getElementById('task-empty');
+
+  function showAlert(msg, type) {
+    alertWrap.innerHTML = '<div class="alert alert--' + (type || 'info') + '">' + msg + '</div>';
+    setTimeout(function() { alertWrap.innerHTML = ''; }, 4000);
+  }
+  function showForm(item) {
+    if (item) {
+      idEl.value = item.id;
+      userIdEl.value = item.user_id;
+      projectIdEl.value = item.project_id;
+      typeIdEl.value = item.type_of_activity_id;
+      startEl.value = toLocalISO(item.start_time);
+      endEl.value = toLocalISO(item.end_time);
+      descEl.value = item.description || '';
+    } else {
+      idEl.value = '';
+      userIdEl.value = '';
+      projectIdEl.value = '';
+      typeIdEl.value = '';
+      startEl.value = '';
+      endEl.value = '';
+      descEl.value = '';
+    }
+    formWrap.style.display = 'block';
+  }
+  function hideForm() { formWrap.style.display = 'none'; }
+  function formatDt(s) {
+    if (!s) return '—';
+    var d = new Date(s);
+    return d.toLocaleString();
+  }
+  function render(rows) {
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0) {
+      document.getElementById('task-table').style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    document.getElementById('task-table').style.display = 'table';
+    emptyState.style.display = 'none';
+    rows.forEach(function(r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r.id + '</td><td>' + r.user_id + '</td><td>' + r.project_id + '</td><td>' + r.type_of_activity_id + '</td><td>' + formatDt(r.start_time) + '</td><td>' + formatDt(r.end_time) + '</td><td class="actions">' +
+        '<button type="button" class="btn btn--small btn--secondary edit-btn" data-id="' + r.id + '">Edit</button> ' +
+        '<button type="button" class="btn btn--small btn--danger del-btn" data-id="' + r.id + '">Delete</button></td>';
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('.edit-btn').forEach(function(btn) {
+      API.tasks.get(+btn.dataset.id).then(showForm).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+    });
+    tbody.querySelectorAll('.del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this task?')) return;
+        API.tasks.delete(+this.dataset.id).then(function() { load(); showAlert('Deleted.'); }).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+      });
+    });
+  }
+  function load() {
+    API.tasks.list().then(render).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); render([]); });
+  }
+  document.getElementById('btn-add').onclick = function() { showForm(null); };
+  document.getElementById('btn-add-empty').onclick = function() { showForm(null); };
+  document.getElementById('task-cancel').onclick = hideForm;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var id = idEl.value ? +idEl.value : null;
+    var payload = {
+      user_id: +userIdEl.value,
+      project_id: +projectIdEl.value,
+      type_of_activity_id: +typeIdEl.value,
+      start_time: startEl.value,
+      end_time: endEl.value,
+      description: descEl.value || null
+    };
+    var p = id ? API.tasks.update(id, payload) : API.tasks.create(payload);
+    p.then(function() { hideForm(); load(); showAlert(id ? 'Updated.' : 'Created.'); }).catch(function(err) { showAlert(err.data?.detail || err.message, 'error'); });
+  });
+  load();
+})();
+</script>
+{% endblock %}

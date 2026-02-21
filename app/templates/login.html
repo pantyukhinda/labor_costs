@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Log in — Labor costs{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Log in</h1>
+    <div id="login-error" class="alert alert--error" style="display: none;"></div>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn--primary">Log in</button>
+    </form>
+    <p class="footer-link"><a href="/pages/register">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/api.js"></script>
+<script>
+(function() {
+  const form = document.getElementById('login-form');
+  const errEl = document.getElementById('login-error');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errEl.style.display = 'none';
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+      await API.login(email, password);
+      window.location.href = '/pages/';
+    } catch (err) {
+      errEl.textContent = err.data?.detail || err.message || 'Login failed';
+      errEl.style.display = 'block';
+    }
+  });
+})();
+</script>
+{% endblock %}

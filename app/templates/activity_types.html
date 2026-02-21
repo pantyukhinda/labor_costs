@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Activity types — Labor costs{% endblock %}
+{% block content %}
+<h1>Activity types</h1>
+<div class="panel">
+  <div class="panel__header">
+    <h2 class="mb-0">All activity types</h2>
+    <button type="button" class="btn btn--primary" id="btn-add">Add activity type</button>
+  </div>
+  <div id="form-wrap" style="display: none;">
+    <form id="at-form">
+      <input type="hidden" id="at-id" name="id">
+      <div class="form-group">
+        <label for="at-name">Name</label>
+        <input type="text" id="at-name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="at-organization_id">Organization ID</label>
+        <input type="number" id="at-organization_id" name="organization_id" min="0" placeholder="Optional">
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="at-visible" name="visible" checked> Visible</label>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn--primary">Save</button>
+        <button type="button" class="btn btn--secondary" id="at-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div id="alert-wrap"></div>
+  <div class="table-wrap">
+    <table class="data-table" id="at-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Organization ID</th><th>Visible</th><th class="actions">Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div id="at-empty" class="empty-state" style="display: none;">
+    <p>No activity types yet.</p>
+    <button type="button" class="btn btn--primary" id="btn-add-empty">Add activity type</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/api.js"></script>
+<script>
+(function() {
+  const tbody = document.querySelector('#at-table tbody');
+  const formWrap = document.getElementById('form-wrap');
+  const form = document.getElementById('at-form');
+  const idEl = document.getElementById('at-id');
+  const nameEl = document.getElementById('at-name');
+  const orgIdEl = document.getElementById('at-organization_id');
+  const visibleEl = document.getElementById('at-visible');
+  const alertWrap = document.getElementById('alert-wrap');
+  const emptyState = document.getElementById('at-empty');
+
+  function showAlert(msg, type) {
+    alertWrap.innerHTML = '<div class="alert alert--' + (type || 'info') + '">' + msg + '</div>';
+    setTimeout(function() { alertWrap.innerHTML = ''; }, 4000);
+  }
+  function showForm(item) {
+    if (item) {
+      idEl.value = item.id;
+      nameEl.value = item.name;
+      orgIdEl.value = item.organization_id != null ? item.organization_id : '';
+      visibleEl.checked = item.visible !== false;
+    } else {
+      idEl.value = '';
+      nameEl.value = '';
+      orgIdEl.value = '';
+      visibleEl.checked = true;
+    }
+    formWrap.style.display = 'block';
+  }
+  function hideForm() { formWrap.style.display = 'none'; }
+  function escapeHtml(s) {
+    if (s == null) return '';
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+  function render(rows) {
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0) {
+      document.getElementById('at-table').style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    document.getElementById('at-table').style.display = 'table';
+    emptyState.style.display = 'none';
+    rows.forEach(function(r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r.id + '</td><td>' + escapeHtml(r.name) + '</td><td>' + (r.organization_id != null ? r.organization_id : '') + '</td><td>' + (r.visible !== false ? 'Yes' : 'No') + '</td><td class="actions">' +
+        '<button type="button" class="btn btn--small btn--secondary edit-btn" data-id="' + r.id + '">Edit</button> ' +
+        '<button type="button" class="btn btn--small btn--danger del-btn" data-id="' + r.id + '">Delete</button></td>';
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('.edit-btn').forEach(function(btn) {
+      API.activityTypes.get(+btn.dataset.id).then(showForm).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+    });
+    tbody.querySelectorAll('.del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Delete this activity type?')) return;
+        API.activityTypes.delete(+this.dataset.id).then(function() { load(); showAlert('Deleted.'); }).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); });
+      });
+    });
+  }
+  function load() {
+    API.activityTypes.list().then(render).catch(function(e) { showAlert(e.data?.detail || e.message, 'error'); render([]); });
+  }
+  document.getElementById('btn-add').onclick = function() { showForm(null); };
+  document.getElementById('btn-add-empty').onclick = function() { showForm(null); };
+  document.getElementById('at-cancel').onclick = hideForm;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var id = idEl.value ? +idEl.value : null;
+    var payload = { name: nameEl.value, organization_id: orgIdEl.value ? +orgIdEl.value : null, visible: visibleEl.checked };
+    var p = id ? API.activityTypes.update(id, payload) : API.activityTypes.create(payload);
+    p.then(function() { hideForm(); load(); showAlert(id ? 'Updated.' : 'Created.'); }).catch(function(err) { showAlert(err.data?.detail || err.message, 'error'); });
+  });
+  load();
+})();
+</script>
+{% endblock %}

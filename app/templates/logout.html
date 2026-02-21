@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logging out…</title>
+  <link rel="stylesheet" href="/static/css/ubuntu-theme.css">
+</head>
+<body>
+  <p style="padding: 2rem;">Logging out…</p>
+  <script src="/static/js/api.js"></script>
+  <script>
+    API.logout().then(function() {
+      window.location.href = '/pages/';
+    }).catch(function() {
+      window.location.href = '/pages/';
+    });
+  </script>
+</body>
+</html>
