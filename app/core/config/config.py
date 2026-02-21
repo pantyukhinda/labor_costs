@@ -56,6 +56,13 @@ class PgAdminConfig(BaseModel):
     port: int
 
 
+class AdminUserConfig(BaseModel):
+    """Service superuser (id=0) created at bootstrap"""
+
+    email: EmailStr
+    password: SecretStr
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         extra="ignore",
@@ -71,7 +78,7 @@ class Settings(BaseSettings):
     run: RunConfig
     auth: AuthenticateConfig
     pgadmin: PgAdminConfig
-    # api: ApiPrefix = ApiPrefix()
+    admin: AdminUserConfig
 
 
 settings = Settings()

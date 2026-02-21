@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
@@ -6,6 +7,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from core.config import settings
+from admin_user import run_bootstrap
 
 from tasks.router import router as router_tasks
 from organizations.router import router as router_organizations
@@ -17,7 +19,13 @@ from projects.router import router as router_projects
 from pages.router import router as pages_router
 
 
-app = FastAPI(title=settings.run.title)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await run_bootstrap()
+    yield
+
+
+app = FastAPI(title=settings.run.title, lifespan=lifespan)
 
 
 @app.get("/", include_in_schema=False)
@@ -46,5 +54,4 @@ if __name__ == "__main__":
         port=settings.run.port,
         reload=settings.run.reload,
     )
-# TODO: Add initial step, it must be adds "admin" user with id = 0.
 # TODO: Change main exceptions with custom exceptions
