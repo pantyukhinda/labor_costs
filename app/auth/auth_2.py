@@ -107,6 +107,8 @@ class AuthVerifier:
         return current_user
 
 
+auth_verifier = AuthVerifier()
+
 # app = FastAPI()
 
 # @app.post("/token")

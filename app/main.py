@@ -13,6 +13,7 @@ from tasks.router import router as router_tasks
 from organizations.router import router as router_organizations
 from activity_types.router import router as router_activity_types
 from divisions.router import router as router_divisions
+from auth.router import router as router_auth
 from users.router import router as router_users
 from projects.router import router as router_projects
 
@@ -37,6 +38,7 @@ static_dir = Path(__file__).resolve().parent / "static"
 if static_dir.is_dir():
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+app.include_router(router_auth)
 app.include_router(router_users)
 app.include_router(router_tasks)
 app.include_router(router_organizations)
