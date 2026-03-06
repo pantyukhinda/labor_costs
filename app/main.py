@@ -49,7 +49,7 @@ app.include_router(pages_router)
 
 if __name__ == "__main__":
     uvicorn.run(
-        f"{__name__}:app",
+        app=f"{__name__}:app",
         host=settings.run.host,
         port=settings.run.port,
         reload=settings.run.reload,
