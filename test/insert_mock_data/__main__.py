@@ -1,5 +1,4 @@
 import asyncio
-from posixpath import abspath, dirname
 
 
 from dao import (
