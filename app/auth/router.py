@@ -1,5 +1,7 @@
-from typing import List
-from fastapi import APIRouter, HTTPException, Response, status
+from datetime import datetime, timedelta, timezone
+from typing import Annotated, List
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi.security import OAuth2PasswordRequestForm
 
 from users.schemas import (
     UserCreate,
@@ -8,6 +10,7 @@ from users.schemas import (
 )
 from users.dao import UserDAO
 from .auth_2 import auth_verifier
+from .schemas import Token
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -54,3 +57,38 @@ async def logout_user(response: Response):
     """Logout user"""
     response.delete_cookie("labor_costs_access_token")
     return {"logout": True}
+
+
+@router.post("/token")
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+) -> Token:
+    user = await auth_verifier.authenticate_user(
+        email=form_data.username,
+        password=form_data.password,
+    )
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth_verifier.create_access_token(
+        data={"user_id": user.id}, expires_delta=access_token_expires
+    )
+    return Token(access_token=access_token, token_type="bearer")
+
+
+@router.get("/users/me/")
+async def read_users_me(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+) -> User:
+    return current_user
+
+
+@router.get("/users/me/items/")
+async def read_own_items(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    return [{"item_id": "Foo", "owner": current_user.username}]
