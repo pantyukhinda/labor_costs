@@ -1,3 +1,3 @@
-from .auth import auth_verifier
+from .auth_2 import auth_verifier
 
 __all__ = ["auth_verifier"]

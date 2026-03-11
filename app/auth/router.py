@@ -3,6 +3,7 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
+from core.config import settings
 from users.schemas import (
     UserCreate,
     UserLogin,
@@ -73,7 +74,9 @@ async def login_for_access_token(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(
+        minutes=settings.auth.access_token_expire_minutes,
+    )
     access_token = auth_verifier.create_access_token(
         data={"user_id": user.id}, expires_delta=access_token_expires
     )
@@ -82,13 +85,16 @@ async def login_for_access_token(
 
 @router.get("/users/me/")
 async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-) -> User:
+    current_user: Annotated[
+        UserResponse,
+        Depends(auth_verifier.get_current_user),
+    ],
+):
     return current_user
 
 
-@router.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+# @router.get("/users/me/items/")
+# async def read_own_items(
+#     current_user: Annotated[User, Depends(get_current_user)],
+# ):
+#     return [{"item_id": "Foo", "owner": current_user.username}]
