@@ -52,10 +52,10 @@ class AuthVerifier:
         email: EmailStr | None = None,
         user_id: int | None = None,
     ):
-        if email:
+        if email is not None:
             user = await UserDAO.find_one_or_none(email=email)
             return user
-        if user_id:
+        if user_id is not None:
             user = await UserDAO.find_one_or_none(id=user_id)
             return user
         return None

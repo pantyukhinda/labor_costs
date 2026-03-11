@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, List
+from typing import Annotated, Any, List
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -86,7 +86,7 @@ async def login_for_access_token(
 @router.get("/users/me/")
 async def read_users_me(
     current_user: Annotated[
-        UserResponse,
+        Any,
         Depends(auth_verifier.get_current_user),
     ],
 ):
