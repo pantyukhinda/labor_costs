@@ -1,11 +1,12 @@
 """Bootstrap the service superuser (admin) with id=0 and system org/division."""
 
 from core.config import settings
-from auth.auth import auth_verifier
+from auth.auth_2 import auth_verifier
 from organizations.dao import OrganizationDAO
 from divisions.dao import DivisionDAO
 from users.dao import UserDAO
 
+# Move these constants to the .env
 ADMIN_USER_ID = 0
 SYSTEM_ORG_ID = 0
 SYSTEM_DIVISION_ID = 0
