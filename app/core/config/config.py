@@ -48,6 +48,7 @@ class RunConfig(BaseModel):
 class AuthenticateConfig(BaseModel):
     key: str
     algorithm: str
+    access_token_expire_minutes: int
 
 
 class PgAdminConfig(BaseModel):

@@ -14,8 +14,7 @@ from .schemas import Token, TokenData, User
 from users.schemas import UserResponse
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token")
+OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 class AuthVerifier:
