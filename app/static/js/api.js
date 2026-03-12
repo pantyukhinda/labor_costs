@@ -62,11 +62,11 @@ const API = {
 
 // User / auth
 API.login = (email, password) =>
-  API.post("/user/login", { email, password });
+  API.post("/auth/login", { email, password });
 API.logout = () =>
-  API.post("/user/logout");
+  API.post("/auth/logout");
 API.register = (data) =>
-  API.post("/user/register", data);
+  API.post("/auth/register", data);
 
 // Entities
 API.organizations = {

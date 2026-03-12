@@ -33,13 +33,13 @@ async def get_current_user(token: str = Depends(get_token)):
         )
 
     expire = payload.get("exp")
-    if not expire or int(expire) < datetime.now(timezone.utc).timestamp():
+    if not expire or int(expire) < int(datetime.now(timezone.utc).timestamp()):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="JWT token is outdated",
         )
 
-    user_id = payload.get("sub")
+    user_id = payload.get("user_id") or payload.get("sub")
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

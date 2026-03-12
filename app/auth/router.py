@@ -62,6 +62,7 @@ async def logout_user(response: Response):
 
 @router.post("/token")
 async def login_for_access_token(
+    response: Response,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     user = await auth_verifier.authenticate_user(
@@ -80,6 +81,7 @@ async def login_for_access_token(
     access_token = auth_verifier.create_access_token(
         data={"user_id": user.id}, expires_delta=access_token_expires
     )
+    response.set_cookie("labor_costs_access_token", access_token, httponly=True)
     return Token(access_token=access_token, token_type="bearer")
 
 

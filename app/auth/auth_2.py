@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
+from typing import Annotated, Any
 from pydantic import EmailStr
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 
 from users.dao import UserDAO
 from core.config import settings
-from .schemas import Token, TokenData, User
-from users.schemas import UserResponse
+from .schemas import TokenData
 
 
 OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -24,22 +23,30 @@ class AuthVerifier:
         self.password_hash = PasswordHash.recommended()
         self.DUMMY_HASH = self.password_hash.hash("dummypassword")
 
-    def verify_password(self, plain_password, hashed_password):
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """Verify a password against a hashed password"""
         return self.password_hash.verify(plain_password, hashed_password)
 
-    def get_password_hash(self, password):
+    def get_password_hash(self, password: str) -> str:
         """Get a hashed password"""
         return self.password_hash.hash(password)
 
-    def create_access_token(self, data: dict, expires_delta: timedelta | None = None):
+    def create_access_token(
+        self,
+        data: dict[str, Any],
+        expires_delta: timedelta | None = None,
+    ) -> str:
         """Create a JWT access token"""
-        to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.now(timezone.utc) + expires_delta
-        else:
-            expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-        to_encode.update({"exp": expire})
+        to_encode: dict[str, Any] = data.copy()
+        expire_dt = datetime.now(timezone.utc) + (
+            expires_delta if expires_delta else timedelta(minutes=15)
+        )
+        expire_ts = int(expire_dt.timestamp())
+        user_id = to_encode.get("user_id")
+        if user_id is not None:
+            # Compatibility with cookie-based auth dependency.
+            to_encode.setdefault("sub", str(user_id))
+        to_encode["exp"] = expire_ts
         encoded_jwt = jwt.encode(
             payload=to_encode,
             key=settings.auth.key,
@@ -49,6 +56,7 @@ class AuthVerifier:
 
     async def get_user(
         self,
+        *,
         email: EmailStr | None = None,
         user_id: int | None = None,
     ):
@@ -84,10 +92,10 @@ class AuthVerifier:
                 key=settings.auth.key,
                 algorithms=[settings.auth.algorithm],
             )
-            user_id = payload.get("user_id")
+            user_id = payload.get("user_id") or payload.get("sub")
             if user_id is None:
                 raise credentials_exception
-            token_data = TokenData(user_id=user_id)
+            token_data = TokenData(user_id=int(user_id))
         except InvalidTokenError:
             raise credentials_exception
         user = await self.get_user(user_id=token_data.user_id)
