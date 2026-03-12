@@ -39,7 +39,7 @@ async def get_current_user(token: str = Depends(get_token)):
             detail="JWT token is outdated",
         )
 
-    user_id = payload.get("user_id") or payload.get("sub")
+    user_id = payload.get("user_id")
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

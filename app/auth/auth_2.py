@@ -42,10 +42,6 @@ class AuthVerifier:
             expires_delta if expires_delta else timedelta(minutes=15)
         )
         expire_ts = int(expire_dt.timestamp())
-        user_id = to_encode.get("user_id")
-        if user_id is not None:
-            # Compatibility with cookie-based auth dependency.
-            to_encode.setdefault("sub", str(user_id))
         to_encode["exp"] = expire_ts
         encoded_jwt = jwt.encode(
             payload=to_encode,
@@ -92,7 +88,7 @@ class AuthVerifier:
                 key=settings.auth.key,
                 algorithms=[settings.auth.algorithm],
             )
-            user_id = payload.get("user_id") or payload.get("sub")
+            user_id = payload.get("user_id")
             if user_id is None:
                 raise credentials_exception
             token_data = TokenData(user_id=int(user_id))
