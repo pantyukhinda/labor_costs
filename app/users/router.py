@@ -1,11 +1,16 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from auth.auth_2 import auth_verifier
 from .schemas import UserResponse, UserUpdate
 from .dao import UserDAO
 
 
-router = APIRouter(prefix="/user", tags=["user"])
+router = APIRouter(
+    prefix="/user",
+    tags=["user"],
+    dependencies=[Depends(auth_verifier.get_current_user)],
+)
 
 
 @router.get("/all", response_model=List[UserResponse])

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from core.config import settings
+from auth.auth_2 import auth_verifier
 from users.schemas import (
     UserCreate,
     UserLogin,

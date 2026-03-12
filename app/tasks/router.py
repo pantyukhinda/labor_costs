@@ -1,7 +1,8 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from dependencies.user import get_current_user
+# from dependencies.user import get_current_user
+from auth.auth_2 import auth_verifier
 from users.models import User
 
 from .schemas import (
@@ -12,7 +13,11 @@ from .schemas import (
 from .dao import TaskDAO
 
 
-router = APIRouter(prefix="/task", tags=["task"])
+router = APIRouter(
+    prefix="/task",
+    tags=["task"],
+    dependencies=[Depends(auth_verifier.get_current_user)],
+)
 
 
 @router.post("/add", response_model=TaskResponse)
@@ -37,7 +42,9 @@ async def get_all_tasks():
 
 # TODO: Add handlers for get all tasks of a specific project
 @router.get("/tasks_of_current_user")
-async def get_current_user_tasks(user: User = Depends(get_current_user)):
+async def get_current_user_tasks(
+    user: User = Depends(auth_verifier.get_current_user),
+):
     """Get all tasks of a specific user"""
 
     return await TaskDAO.find_all(user_id=user.id)

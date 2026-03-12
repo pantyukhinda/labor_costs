@@ -26,7 +26,10 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.run.title, lifespan=lifespan)
+app = FastAPI(
+    title=settings.run.title,
+    lifespan=lifespan,
+)
 
 
 @app.get("/", include_in_schema=False)

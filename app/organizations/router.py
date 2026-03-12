@@ -1,6 +1,7 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from auth.auth_2 import auth_verifier
 from .schemas import (
     OrganizationCreate,
     OrganizationUpdate,
@@ -8,7 +9,11 @@ from .schemas import (
 )
 from .dao import OrganizationDAO
 
-router = APIRouter(prefix="/organization", tags=["organization"])
+router = APIRouter(
+    prefix="/organization",
+    tags=["organization"],
+    dependencies=[Depends(auth_verifier.get_current_user)],
+)
 
 
 @router.post(

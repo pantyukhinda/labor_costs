@@ -1,9 +1,15 @@
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
-router = APIRouter(prefix="/pages", tags=["Фронтенд"])
+from auth.auth_2 import auth_verifier
+
+router = APIRouter(
+    prefix="/pages",
+    tags=["Фронтенд"],
+    dependencies=[Depends(auth_verifier.get_current_user)],
+)
 
 # Resolve templates from app package
 _templates_dir = Path(__file__).resolve().parent.parent / "templates"

@@ -1,6 +1,7 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from auth.auth_2 import auth_verifier
 from .schemas import (
     ProjectCreate,
     ProjectUpdate,
@@ -9,7 +10,11 @@ from .schemas import (
 from .dao import ProjectDAO
 
 
-router = APIRouter(prefix="/project", tags=["project"])
+router = APIRouter(
+    prefix="/project",
+    tags=["project"],
+    dependencies=[Depends(auth_verifier.get_current_user)],
+)
 
 
 @router.post(
