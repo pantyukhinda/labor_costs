@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from activity_types.models import ActivityType
     from divisions.models import Division
     from projects.models import Project
+    from groups.models import Group
 
 
 class Organization(Base):
@@ -25,5 +26,9 @@ class Organization(Base):
         back_populates="organization",
     )
     division: Mapped[list["Division"]] = relationship(
+        back_populates="organization",
+    )
+
+    group: Mapped[list["Group"]] = relationship(
         back_populates="organization",
     )

@@ -8,6 +8,7 @@ from core.models.base import Base
 if TYPE_CHECKING:
     from divisions.models import Division
     from tasks.models import Task
+    from groups.models import Group, UserGroup
 
 
 class User(Base):
@@ -32,5 +33,12 @@ class User(Base):
         back_populates="user",
     )
     task: Mapped[list["Task"]] = relationship(
+        back_populates="user",
+    )
+
+    group: Mapped[list["Group"]] = relationship(
+        secondary="user_group", back_populates="user"
+    )
+    user_group_links: Mapped[list["UserGroup"]] = relationship(
         back_populates="user",
     )

@@ -20,6 +20,7 @@ from organizations.models import Organization
 from projects.models import Project
 from tasks.models import Task
 from users.models import User
+from groups.models import Group, UserGroup
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
